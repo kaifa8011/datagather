@@ -1,5 +1,7 @@
 package com.ciba.datagather.util;
 
+import android.util.Log;
+
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
@@ -14,20 +16,26 @@ import java.util.List;
  * @date 2018/12/6
  */
 public class DataArrangeUtil {
-    public static void dataGather() {
-        DataGatherUtil.gatherDeviceData(true, true, new DeviceDataGatherListener() {
+    private static long millis;
+
+    public static void dataGather(boolean withoutSystemApp, boolean appOnly, boolean geocoder, boolean getSignalStrengths) {
+        millis = System.currentTimeMillis();
+        DataGatherUtil.gatherDeviceData(withoutSystemApp, appOnly, geocoder, getSignalStrengths, new DeviceDataGatherListener() {
             @Override
             public void onDeviceDataGather(String crashData
                     , DeviceData deviceData
                     , List<CustomPackageInfo> installPackageList
                     , List<ProcessData> appProcessList) {
                 arrangeData(crashData, deviceData, installPackageList, appProcessList);
+                Log.e("TAGGGGG", "dataGather time ----> " + (System.currentTimeMillis() - millis));
             }
         });
     }
 
-    public static void arrangeData(String crashData, DeviceData deviceData
-            , List<CustomPackageInfo> installPackageList, List<ProcessData> appProcessList) {
+    public static void arrangeData(String crashData
+            , DeviceData deviceData
+            , List<CustomPackageInfo> installPackageList
+            , List<ProcessData> appProcessList) {
         DataSynchronizeManager.getInstance().getDataGatherListener().onDataGather(crashData, deviceData
                 , installPackageList, appProcessList);
     }

@@ -70,7 +70,7 @@ public class DataGatherManager {
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
         }
-        DataArrangeUtil.dataGather();
+        DataArrangeUtil.dataGather(true, true, false, true);
     }
 
     /**

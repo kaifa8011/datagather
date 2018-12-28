@@ -59,6 +59,7 @@ public class ProcessUtil {
                         ProcessData appProcess = processList.get(i);
                         if (packageName.equals(appProcess.getPackageName())) {
                             hasThisProcess = true;
+                            break;
                         }
                     }
                     if (hasThisProcess) {

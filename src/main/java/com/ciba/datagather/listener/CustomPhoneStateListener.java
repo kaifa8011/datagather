@@ -20,6 +20,8 @@ import com.ciba.datagather.common.DataGatherManager;
 public class CustomPhoneStateListener extends PhoneStateListener {
     private final Handler handler;
     private boolean sent;
+    private long preMillis;
+    private long time;
 
     public CustomPhoneStateListener(Handler handler) {
         this.handler = handler;
@@ -33,25 +35,42 @@ public class CustomPhoneStateListener extends PhoneStateListener {
         if (telephonyManager != null) {
             telephonyManager.listen(this, PhoneStateListener.LISTEN_NONE);
         }
-        sentMessage(getBsss(signalStrength), 0);
+        sentMessage(getBsss(signalStrength));
     }
 
     /**
-     * 发送信号轻度信息
+     * 发送信号强度信息
+     *
      * @param signalStrength ：信号强度信息
-     * @param time ：延迟时间（主要用于长时间没有监听到变化）
      */
-    public void sentMessage(String signalStrength, long time) {
+    public void sentMessage(String signalStrength) {
         if (!sent) {
-            if (time == 0) {
-                sent = true;
+            sent = true;
+            if (preMillis != 0 && System.currentTimeMillis() - preMillis > this.time) {
+                return;
             }
             if (handler != null) {
                 handler.removeCallbacksAndMessages(null);
                 Message message = new Message();
                 message.obj = signalStrength;
-                handler.sendMessageDelayed(message, time);
+                handler.sendMessage(message);
             }
+        }
+    }
+
+    /**
+     * 发送信号强度信息
+     *
+     * @param time ：延迟时间（主要用于长时间没有监听到变化）
+     */
+    public void sentMessageDelayed(long time) {
+        this.time = time;
+        this.preMillis = System.currentTimeMillis();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            Message message = new Message();
+            message.obj = Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
+            handler.sendMessageDelayed(message, time);
         }
     }
 

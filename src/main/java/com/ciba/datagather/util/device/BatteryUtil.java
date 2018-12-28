@@ -18,11 +18,11 @@ public class BatteryUtil {
     public static int getBatteryLevel() {
         int level = 100;
         try {
-            BatteryManager manager = (BatteryManager) DataGatherManager.getInstance().getContext().getSystemService(Context.BATTERY_SERVICE);
-            if (manager == null) {
-                return 100;
-            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                BatteryManager manager = (BatteryManager) DataGatherManager.getInstance().getContext().getSystemService(Context.BATTERY_SERVICE);
+                if (manager == null) {
+                    return 100;
+                }
                 level = manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
             }
         } catch (Exception e) {

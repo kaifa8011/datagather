@@ -4,6 +4,7 @@ import android.os.Build;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.UUID;
 
@@ -19,17 +20,52 @@ public class OtherDataUtil {
     public static String getCid() {
         String str1 = null;
         Object localOb;
+        FileReader fileReader1 = null;
+        FileReader fileReader2 = null;
+        BufferedReader bufferedReader1 = null;
+        BufferedReader bufferedReader2 = null;
         try {
-            localOb = new FileReader("/sys/block/mmcblk0/device/type");
-            localOb = new BufferedReader((Reader) localOb).readLine()
-                    .toLowerCase().contentEquals("mmc");
+            fileReader1 = new FileReader("/sys/block/mmcblk0/device/type");
+            bufferedReader1 = new BufferedReader(fileReader1);
+            localOb = bufferedReader1.readLine().toLowerCase().contentEquals("mmc");
             if (localOb != null) {
                 str1 = "/sys/block/mmcblk0/device/";
             }
             // nand ID
-            localOb = new FileReader(str1 + "cid");
-            str1 = new BufferedReader((Reader) localOb).readLine();
-        } catch (Exception e1) {
+            fileReader2 = new FileReader(str1 + "cid");
+            bufferedReader2 = new BufferedReader(fileReader2);
+            str1 = bufferedReader2.readLine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fileReader1 != null){
+                try {
+                    fileReader1.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fileReader2 != null){
+                try {
+                    fileReader2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedReader1 != null){
+                try {
+                    bufferedReader1.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedReader2 != null){
+                try {
+                    bufferedReader2.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return str1;
     }

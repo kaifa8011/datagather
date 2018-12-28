@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.ciba.datagather.common.DataGatherManager;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
@@ -25,13 +26,17 @@ public class BlueToothUtil {
     public static String getMac() {
         String str = "";
         String macSerial = "";
+        InputStreamReader inputStreamReader = null;
+        LineNumberReader lineNumberReader = null;
+
+
         try {
             Process pp = Runtime.getRuntime().exec(
                     "cat /sys/class/net/wlan0/address ");
-            InputStreamReader ir = new InputStreamReader(pp.getInputStream());
-            LineNumberReader input = new LineNumberReader(ir);
+            inputStreamReader = new InputStreamReader(pp.getInputStream());
+            lineNumberReader = new LineNumberReader(inputStreamReader);
             for (; null != str; ) {
-                str = input.readLine();
+                str = lineNumberReader.readLine();
                 if (str != null) {
                     // 去空格
                     macSerial = str.trim();
@@ -40,22 +45,46 @@ public class BlueToothUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (lineNumberReader != null){
+                try {
+                    lineNumberReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inputStreamReader != null){
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         if (TextUtils.isEmpty(macSerial)) {
-            try {
-                macSerial = loadFileAsString("/sys/class/net/eth0/address")
-                        .toUpperCase().substring(0, 17);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            macSerial = loadFileAsString("/sys/class/net/eth0/address");
         }
         return TextUtils.isEmpty(macSerial) ? getMacFromSecure(DataGatherManager.getInstance().getContext()) : macSerial;
     }
 
-    private static String loadFileAsString(String fileName) throws Exception {
-        FileReader reader = new FileReader(fileName);
-        String text = loadReaderAsString(reader);
-        reader.close();
+    private static String loadFileAsString(String fileName) {
+        String text = null;
+        FileReader reader = null;
+        try {
+            reader = new FileReader(fileName);
+            text = loadReaderAsString(reader);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return text;
     }
 

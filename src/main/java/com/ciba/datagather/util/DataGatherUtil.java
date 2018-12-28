@@ -13,6 +13,7 @@ import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.util.device.ProcessUtil;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
+import com.ciba.datasynchronize.entity.WifiOtherDeviceData;
 import com.ciba.datasynchronize.manager.DataCacheManager;
 import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datagather.util.device.AdvertisingUtil;
@@ -28,8 +29,9 @@ import com.ciba.datagather.util.device.PackageUtil;
 import com.ciba.datagather.util.device.PhoneStateUtil;
 import com.ciba.datagather.util.device.RootUtil;
 import com.ciba.datagather.util.device.WifiUtil;
-import com.ciba.datasynchronize.common.DataSynchronizeManager;
 import com.ciba.http.manager.AsyncThreadPoolManager;
+
+import java.util.List;
 
 /**
  * @author ciba
@@ -43,50 +45,62 @@ public class DataGatherUtil {
      *
      * @param withoutSystemApp         ：是否屏蔽系统应用（不搜集安装的系统应用信息）
      * @param appOnly                  ：是否每个应用只搜集一个进程信息
+     * @param geocoder                 ：是否需要地理编码
      * @param deviceDataGatherListener ：设备信息收集监听
      */
-    public static void gatherDeviceData(final boolean withoutSystemApp, final boolean appOnly, final DeviceDataGatherListener deviceDataGatherListener) {
+    public static void gatherDeviceData(final boolean withoutSystemApp
+            , final boolean appOnly
+            , final boolean geocoder
+            , boolean getSignalStrengths
+            , final DeviceDataGatherListener deviceDataGatherListener) {
         if (deviceDataGatherListener == null) {
             return;
         }
-        // TODO: 2018/12/11 手机信号强度是否有必要搜集
-        BaseStationUtil.getSignalStrengths(new Handler(Looper.getMainLooper()) {
+        if (getSignalStrengths) {
+            BaseStationUtil.getSignalStrengths(500, new Handler(Looper.getMainLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    final String signalStrength = (String) msg.obj;
+                    gatherDeviceData(withoutSystemApp, appOnly, geocoder, signalStrength, deviceDataGatherListener);
+                }
+            });
+        } else {
+            gatherDeviceData(withoutSystemApp, appOnly, geocoder, Constant.GET_DATA_NULL, deviceDataGatherListener);
+        }
+    }
+
+    private static void gatherDeviceData(final boolean withoutSystemApp, final boolean appOnly, final boolean geocoder
+            , final String signalStrength, final DeviceDataGatherListener deviceDataGatherListener) {
+        AsyncThreadPoolManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
-            public void handleMessage(Message msg) {
-                final String signalStrength = (String) msg.obj;
-                AsyncThreadPoolManager.getInstance().getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
+            public void run() {
+                CustomBaseStation customBaseStation = BaseStationUtil.getBaseStation(signalStrength);
 
-                        CustomBaseStation customBaseStation = BaseStationUtil.getBaseStation(signalStrength);
+                DeviceData deviceData = new DeviceData();
 
-                        DeviceData deviceData = new DeviceData();
+                gatherDisplayData(deviceData);
 
-                        gatherDisplayData(deviceData);
+                gatherNetworkData(deviceData);
 
-                        gatherNetworkData(deviceData);
+                gatherPhoneStateData(deviceData);
 
-                        gatherPhoneStateData(deviceData);
+                gatherLocationAndStationData(geocoder, deviceData, customBaseStation);
 
-                        gatherLocationAndStationData(deviceData, customBaseStation);
+                gatherBatteryData(deviceData);
 
-                        gatherBatteryData(deviceData);
+                gatherBluetoothData(deviceData);
 
-                        gatherBluetoothData(deviceData);
+                gatherOtherData(deviceData);
 
-                        gatherOtherData(deviceData);
+                String crashData = DataCacheManager.getInstance().getCrashData();
 
-                        String crashData = DataCacheManager.getInstance().getCrashData();
-
-                        deviceDataGatherListener.onDeviceDataGather(crashData
-                                , deviceData
-                                , PackageUtil.getInstallPackageList(withoutSystemApp)
-                                , ProcessUtil.getAppProcessList(withoutSystemApp, appOnly));
-                    }
-                });
+                // getInstallPackageList()获取应用名称安装列表多时比较耗时
+                deviceDataGatherListener.onDeviceDataGather(crashData
+                        , deviceData
+                        , PackageUtil.getInstallPackageList(withoutSystemApp)
+                        , ProcessUtil.getAppProcessList(withoutSystemApp, appOnly));
             }
         });
-
     }
 
     /**
@@ -106,8 +120,8 @@ public class DataGatherUtil {
     /**
      * 收集地理位置信息和基站信息
      */
-    private static void gatherLocationAndStationData(DeviceData deviceData, CustomBaseStation customBaseStation) {
-        final CustomLocation customLocation = LocationUtil.getCustomLocation();
+    private static void gatherLocationAndStationData(boolean geocoder, DeviceData deviceData, CustomBaseStation customBaseStation) {
+        final CustomLocation customLocation = LocationUtil.getCustomLocation(geocoder);
         deviceData.setLat(customLocation.getLat());
         deviceData.setLng(customLocation.getLng());
         deviceData.setCountry(customLocation.getCountry());
@@ -162,16 +176,32 @@ public class DataGatherUtil {
      * 收集网络相关数据
      */
     private static void gatherNetworkData(DeviceData deviceData) {
-        CustomWifiInfo wifiInfo = WifiUtil.getWifiInfo();
-
         deviceData.setNetworkType(NetworkUtil.getCurrentNetType(Constant.GET_DATA_NULL));
         deviceData.setIp(NetworkUtil.getHostIP());
         deviceData.setNetworkAddress(NetworkUtil.getMacAddress());
+
+        CustomWifiInfo wifiInfo = WifiUtil.getWifiInfo();
         deviceData.setNetwkId(wifiInfo.getNetworkId());
         deviceData.setBssId(wifiInfo.getBssid());
         deviceData.setSsid(wifiInfo.getSsid());
         deviceData.setLksd(wifiInfo.getLinkSpeed());
         deviceData.setRssi(wifiInfo.getRssi());
+
+        // 将其他连接WIFI的设备的mac地址以逗号分隔
+        List<WifiOtherDeviceData> wifiOtherDeviceDataList = WifiUtil.datagramPacket(deviceData.getIp(), wifiInfo.getBssid());
+        if (wifiOtherDeviceDataList != null && wifiOtherDeviceDataList.size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < wifiOtherDeviceDataList.size(); i++) {
+                WifiOtherDeviceData wifiOtherDeviceData = wifiOtherDeviceDataList.get(i);
+                if (i == 0) {
+                    stringBuilder.append(wifiOtherDeviceData.getMac());
+                } else {
+                    stringBuilder.append(",").append(wifiOtherDeviceData.getMac());
+                }
+            }
+            wifiOtherDeviceDataList.clear();
+            deviceData.setNa(stringBuilder.toString());
+        }
     }
 
     /**

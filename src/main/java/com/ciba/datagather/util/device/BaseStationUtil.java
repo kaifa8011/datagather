@@ -34,21 +34,21 @@ public class BaseStationUtil {
      *
      * @param handler：通过handler返回收集的字符串
      */
-    public static void getSignalStrengths(final Handler handler) {
+    public static void getSignalStrengths(long time, Handler handler) {
         TelephonyManager telephonyManager = (TelephonyManager)
                 DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
         CustomPhoneStateListener phoneStateListener = new CustomPhoneStateListener(handler);
         if (telephonyManager == null) {
-            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM, 0);
+            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
             return;
         }
         int simState = telephonyManager.getSimState();
         if (TelephonyManager.SIM_STATE_ABSENT == simState || TelephonyManager.SIM_STATE_UNKNOWN == simState) {
-            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM, 0);
+            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
             return;
         }
+        phoneStateListener.sentMessageDelayed(time);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM, 100);
     }
 
     /**
@@ -108,12 +108,12 @@ public class BaseStationUtil {
                     customBaseStation.setLac(lac + "");
                     customBaseStation.setBscid(cid);
                 } else {
-                    customBaseStation.setBscid("未获取到,可能没插sim卡");
-                    customBaseStation.setLac("未获取到,可能没插sim卡");
+                    customBaseStation.setBscid(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
+                    customBaseStation.setLac(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
                 }
             } else {
-                customBaseStation.setBscid("用户拒绝权限");
-                customBaseStation.setLac("用户拒绝权限");
+                customBaseStation.setBscid(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
+                customBaseStation.setLac(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
             }
         } catch (Exception e) {
             e.printStackTrace();

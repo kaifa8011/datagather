@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.ciba.datagather.entity.CustomLocation;
-import com.ciba.datagather.listener.CustomLocationListener;
 import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datasynchronize.manager.DataCacheManager;
 import com.ciba.datasynchronize.manager.LoaderUploaderManager;
@@ -27,15 +26,15 @@ import java.util.Locale;
 
 public class LocationUtil {
 
-    public static CustomLocation getCustomLocation() {
+    public static CustomLocation getCustomLocation(boolean geocoder) {
         String country = "CN";
         double lat = 0.0;
         double lng = 0.0;
         try {
             String latStr = DataCacheManager.getInstance().getLat();
-            if (!TextUtils.isEmpty(latStr)){
+            if (!TextUtils.isEmpty(latStr)) {
                 String lngStr = DataCacheManager.getInstance().getLng();
-                if (!TextUtils.isEmpty(lngStr)){
+                if (!TextUtils.isEmpty(lngStr)) {
                     lat = Double.parseDouble(latStr);
                     lng = Double.parseDouble(lngStr);
                 }
@@ -56,13 +55,11 @@ public class LocationUtil {
                     if (location != null) {
                         changedLocationInfo(location, customLocation);
                     } else {
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, new CustomLocationListener());
                         Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         changedLocationInfo(locationNet, customLocation);
                     }
                 } else {
                     // 从网络获取经纬度
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, new CustomLocationListener());
                     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     changedLocationInfo(location, customLocation);
                 }
@@ -78,12 +75,15 @@ public class LocationUtil {
                 customLocation.setTime(System.currentTimeMillis());
                 loaderLocation();
             }
-            Geocoder gc = new Geocoder(DataGatherManager.getInstance().getContext(), Locale.getDefault());
-            List<Address> locationList = gc.getFromLocation(customLocation.getLat(), customLocation.getLng(), 1);
-            if (locationList != null && locationList.size() > 0){
-                Address address = locationList.get(0);
-                country = address.getCountryName() + "_" + address.getCountryCode();
-                customLocation.setCountry(country);
+            // 获取当前地址信息，逆地理编码需要一些时间
+            if (geocoder) {
+                Geocoder gc = new Geocoder(DataGatherManager.getInstance().getContext(), Locale.getDefault());
+                List<Address> locationList = gc.getFromLocation(customLocation.getLat(), customLocation.getLng(), 1);
+                if (locationList != null && locationList.size() > 0) {
+                    Address address = locationList.get(0);
+                    country = address.getCountryName() + "_" + address.getCountryCode();
+                    customLocation.setCountry(country);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

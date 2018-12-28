@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 
 import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
-import com.ciba.datasynchronize.manager.DataCacheManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +66,13 @@ public class PackageUtil {
         }
     }
 
+    /**
+     * 获取手机中安装的应用列表
+     *
+     * packageInfo.applicationInfo.loadLabel() 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
+     *
+     * @param withOutSystem ：是否排除系统应用
+     */
     public static List<CustomPackageInfo> getInstallPackageList(boolean withOutSystem) {
         List<CustomPackageInfo> customPackageInfoList = new ArrayList<>();
         try {
@@ -79,8 +85,6 @@ public class PackageUtil {
                 PackageInfo packageInfo = installedList.get(i);
                 if (withOutSystem) {
                     if (packageInfo == null || (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        installedList.remove(i);
-                        i--;
                         continue;
                     }
                 }
@@ -88,8 +92,11 @@ public class PackageUtil {
                 customPackageInfo.setPackageName(packageInfo.packageName);
                 customPackageInfo.setVersionName(packageInfo.versionName);
                 customPackageInfo.setVersionNo(packageInfo.versionCode + "");
+
+                // 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
                 String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
                 customPackageInfo.setApplyName(appName);
+
                 customPackageInfoList.add(customPackageInfo);
             }
             installedList.clear();
