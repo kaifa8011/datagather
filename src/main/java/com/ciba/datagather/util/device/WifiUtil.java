@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.common.DataGatherManager;
@@ -163,6 +162,7 @@ public class WifiUtil {
             if (reader != null) {
                 try {
                     reader.close();
+                    reader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -170,12 +170,12 @@ public class WifiUtil {
             if (fileReader != null) {
                 try {
                     fileReader.close();
+                    fileReader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        Log.e("TAGGGGG", "getSameWifiOtherDeviceData: " + (System.currentTimeMillis() - millis));
         return wifiOtherDeviceDataList;
     }
 

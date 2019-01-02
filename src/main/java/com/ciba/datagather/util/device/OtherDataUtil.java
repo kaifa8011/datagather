@@ -38,30 +38,34 @@ public class OtherDataUtil {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (fileReader1 != null){
+            if (fileReader1 != null) {
                 try {
                     fileReader1.close();
+                    fileReader1 = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (fileReader2 != null){
+            if (fileReader2 != null) {
                 try {
                     fileReader2.close();
+                    fileReader2 = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (bufferedReader1 != null){
+            if (bufferedReader1 != null) {
                 try {
                     bufferedReader1.close();
+                    bufferedReader1 = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            if (bufferedReader2 != null){
+            if (bufferedReader2 != null) {
                 try {
                     bufferedReader2.close();
+                    bufferedReader2 = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

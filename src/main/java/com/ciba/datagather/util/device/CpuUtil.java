@@ -41,6 +41,7 @@ public class CpuUtil {
             if (fr != null){
                 try {
                     fr.close();
+                    fr = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -48,6 +49,7 @@ public class CpuUtil {
             if (localBufferedReader != null){
                 try {
                     localBufferedReader.close();
+                    localBufferedReader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

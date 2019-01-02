@@ -80,14 +80,18 @@ public class RootUtil {
             try {
                 if (os != null) {
                     os.close();
+                    os = null;
                 }
                 if (successResult != null) {
                     successResult.close();
+                    successResult = null;
                 }
                 if (errorResult != null) {
                     errorResult.close();
+                    errorResult = null;
                 }
             } catch (IOException e) {
+                e.printStackTrace();
             }
 
 

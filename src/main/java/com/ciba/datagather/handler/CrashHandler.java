@@ -62,7 +62,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 cause.printStackTrace(printWriter);
                 cause = cause.getCause();
             }
-            printWriter.close();
             DataCacheManager.getInstance().saveCrashData(writer.toString());
         } catch (Exception e) {
             e.printStackTrace();

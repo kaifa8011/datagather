@@ -25,6 +25,7 @@ import java.util.Locale;
  */
 
 public class LocationUtil {
+    private static final long LOCATION_INTERVALS = 7 * 24 * 60 * 60 * 1000;
 
     public static CustomLocation getCustomLocation(boolean geocoder) {
         String country = "CN";
@@ -68,12 +69,10 @@ public class LocationUtil {
                 } else {
                     customLocation.setCoordinateType(3);
                     customLocation.setTime(System.currentTimeMillis());
-                    loaderLocation();
                 }
             } else {
                 customLocation.setCoordinateType(3);
                 customLocation.setTime(System.currentTimeMillis());
-                loaderLocation();
             }
             // 获取当前地址信息，逆地理编码需要一些时间
             if (geocoder) {
@@ -87,6 +86,11 @@ public class LocationUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (customLocation.getLat() == 0 || customLocation.getLat() == 0
+                || System.currentTimeMillis() - DataCacheManager.getInstance().getLngLatTime() >= LOCATION_INTERVALS) {
+            // 如果经纬度有一个为0或者本地经纬度已经超过间隔时间则需要自己想办法获取经纬度
+            loaderLocation();
         }
         return customLocation;
     }

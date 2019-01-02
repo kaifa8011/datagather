@@ -1,7 +1,5 @@
 package com.ciba.datagather.util;
 
-import android.util.Log;
-
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
@@ -27,7 +25,6 @@ public class DataArrangeUtil {
                     , List<CustomPackageInfo> installPackageList
                     , List<ProcessData> appProcessList) {
                 arrangeData(crashData, deviceData, installPackageList, appProcessList);
-                Log.e("TAGGGGG", "dataGather time ----> " + (System.currentTimeMillis() - millis));
             }
         });
     }

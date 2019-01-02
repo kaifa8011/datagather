@@ -68,7 +68,7 @@ public class PackageUtil {
 
     /**
      * 获取手机中安装的应用列表
-     *
+     * <p>
      * packageInfo.applicationInfo.loadLabel() 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
      *
      * @param withOutSystem ：是否排除系统应用

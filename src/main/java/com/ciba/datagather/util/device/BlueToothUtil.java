@@ -49,6 +49,7 @@ public class BlueToothUtil {
             if (lineNumberReader != null){
                 try {
                     lineNumberReader.close();
+                    lineNumberReader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -56,6 +57,7 @@ public class BlueToothUtil {
             if (inputStreamReader != null){
                 try {
                     inputStreamReader.close();
+                    inputStreamReader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -80,6 +82,7 @@ public class BlueToothUtil {
             if (reader != null) {
                 try {
                     reader.close();
+                    reader = null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
