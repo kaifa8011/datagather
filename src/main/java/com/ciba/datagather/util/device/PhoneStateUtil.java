@@ -25,8 +25,12 @@ import java.lang.reflect.Method;
 
 public class PhoneStateUtil {
 
-    @SuppressLint("HardwareIds")
     public static CustomPhoneState getPhoneState() {
+        return getPhoneState(true);
+    }
+
+    @SuppressLint("HardwareIds")
+    public static CustomPhoneState getPhoneState(boolean needDefaultValue) {
         CustomPhoneState customPhoneState = new CustomPhoneState();
         try {
             String androidId = Settings.Secure.getString(DataGatherManager.getInstance().getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -46,12 +50,17 @@ public class PhoneStateUtil {
                     imei = tm.getDeviceId();
                     networkRoaming = tm.isNetworkRoaming();
                 }
-
-                customPhoneState.setImei(TextUtils.isEmpty(imei) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imei);
-                customPhoneState.setIccid(TextUtils.isEmpty(iccid) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : iccid);
-                customPhoneState.setImsi(TextUtils.isEmpty(imsi) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imsi);
+                if (needDefaultValue) {
+                    customPhoneState.setImei(TextUtils.isEmpty(imei) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imei);
+                    customPhoneState.setIccid(TextUtils.isEmpty(iccid) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : iccid);
+                    customPhoneState.setImsi(TextUtils.isEmpty(imsi) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imsi);
+                } else {
+                    customPhoneState.setImei(imei == null ? "" : imei);
+                    customPhoneState.setIccid(iccid == null ? "" : iccid);
+                    customPhoneState.setImsi(imsi == null ? "" : imsi);
+                }
                 customPhoneState.setIsNetworkRoaming(networkRoaming ? 1 : 0);
-            } else {
+            } else if (needDefaultValue) {
                 customPhoneState.setImei(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
                 customPhoneState.setIccid(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
                 customPhoneState.setImsi(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
@@ -99,6 +108,7 @@ public class PhoneStateUtil {
                 customPhoneState.setImei2(deviceId3);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

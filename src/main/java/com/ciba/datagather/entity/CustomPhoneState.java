@@ -108,6 +108,10 @@ public class CustomPhoneState {
         return imei;
     }
 
+    public String getRealImei() {
+        return imei;
+    }
+
     public void setImei(String imei) {
         this.imei = imei;
     }

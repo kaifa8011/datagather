@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.common.DataGatherManager;
@@ -111,7 +112,7 @@ public class WifiUtil {
                 socket.send(dp);
                 position++;
                 if (position % 100 == 0) {
-                    //分两段掉包，一次性发的话，达到236左右，会耗时3秒左右再往下发
+                    //分三段掉包，一次性发的话，达到236左右，会耗时3秒左右再往下发
                     socket.close();
                     socket = new DatagramSocket();
                     socket.setSoTimeout(TIME_OUT);
@@ -152,6 +153,7 @@ public class WifiUtil {
                 if ("00:00:00:00:00:00".equals(mac)) {
                     continue;
                 }
+                Log.e("TTTTTTTTTAG", tokens[0] + "————————————————————" + mac);
                 wifiOtherDeviceDataList.add(new WifiOtherDeviceData(tokens[0], mac, tokens[2]));
             }
         } catch (FileNotFoundException e) {

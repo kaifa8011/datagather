@@ -31,6 +31,9 @@ import com.ciba.datagather.util.device.RootUtil;
 import com.ciba.datagather.util.device.WifiUtil;
 import com.ciba.http.manager.AsyncThreadPoolManager;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -190,17 +193,21 @@ public class DataGatherUtil {
         // 将其他连接WIFI的设备的mac地址以逗号分隔
         List<WifiOtherDeviceData> wifiOtherDeviceDataList = WifiUtil.datagramPacket(deviceData.getIp(), wifiInfo.getBssid());
         if (wifiOtherDeviceDataList != null && wifiOtherDeviceDataList.size() > 0) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < wifiOtherDeviceDataList.size(); i++) {
-                WifiOtherDeviceData wifiOtherDeviceData = wifiOtherDeviceDataList.get(i);
-                if (i == 0) {
-                    stringBuilder.append(wifiOtherDeviceData.getMac());
-                } else {
-                    stringBuilder.append(",").append(wifiOtherDeviceData.getMac());
+            try {
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < wifiOtherDeviceDataList.size(); i++) {
+                    WifiOtherDeviceData wifiOtherDeviceData = wifiOtherDeviceDataList.get(i);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("ip", wifiOtherDeviceData.getIp());
+                    jsonObject.put("mac", wifiOtherDeviceData.getMac());
+                    jsonArray.put(jsonObject);
                 }
+                wifiOtherDeviceDataList.clear();
+                deviceData.setNd(jsonArray.toString());
+                jsonArray = null;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            wifiOtherDeviceDataList.clear();
-            deviceData.setNa(stringBuilder.toString());
         }
     }
 
