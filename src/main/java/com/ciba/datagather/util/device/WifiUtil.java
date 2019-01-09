@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.common.DataGatherManager;
@@ -31,12 +30,8 @@ import java.util.List;
  */
 
 public class WifiUtil {
-    /***
-     * 137端口的主要作用是在局域网中提供计算机的名字或IP地址查询服务
-     */
-    public static final int NETBIOS_PORT = 137;
+
     private static final int TIME_OUT = 20;
-    private static long millis;
 
     /**
      * 獲取WIFi信息
@@ -92,7 +87,6 @@ public class WifiUtil {
      * @return
      */
     public static List<WifiOtherDeviceData> datagramPacket(String localIp, String bssid) {
-        millis = System.currentTimeMillis();
         if (Looper.getMainLooper() == Looper.myLooper()) {
             return null;
         }
@@ -153,7 +147,6 @@ public class WifiUtil {
                 if ("00:00:00:00:00:00".equals(mac)) {
                     continue;
                 }
-                Log.e("TTTTTTTTTAG", tokens[0] + "————————————————————" + mac);
                 wifiOtherDeviceDataList.add(new WifiOtherDeviceData(tokens[0], mac, tokens[2]));
             }
         } catch (FileNotFoundException e) {
