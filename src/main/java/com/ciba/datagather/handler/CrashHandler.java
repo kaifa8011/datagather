@@ -1,6 +1,9 @@
 package com.ciba.datagather.handler;
 
+import com.ciba.datagather.util.device.PackageUtil;
 import com.ciba.datasynchronize.manager.DataCacheManager;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -62,7 +65,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 cause.printStackTrace(printWriter);
                 cause = cause.getCause();
             }
-            DataCacheManager.getInstance().saveCrashData(writer.toString());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("version", PackageUtil.getVersionName());
+            jsonObject.put("data", writer.toString());
+            DataCacheManager.getInstance().saveCrashData(jsonObject.toString());
+            jsonObject = null;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

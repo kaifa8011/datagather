@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 28
@@ -25,26 +25,26 @@ android {
 
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    options.encoding = "UTF-8"
-}
-
-publish {
-    userOrg = 'kaifa8011ol'               // bintray注册的用户名
-    groupId = 'com.ciba'
-    artifactId = 'datagather'                // bintray创建的package
-    publishVersion = '0.1.7'
-}
+//tasks.withType(JavaCompile) {
+//    options.encoding = "UTF-8"
+//}
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    options.encoding = "UTF-8"
+//}
+//
+//publish {
+//    userOrg = 'kaifa8011ol'               // bintray注册的用户名
+//    groupId = 'com.ciba'
+//    artifactId = 'datagather'                // bintray创建的package
+//    publishVersion = '0.1.7'
+//}
 
 dependencies {
     testImplementation 'junit:junit:4.12'
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.android.support:appcompat-v7:28.0.0'
     api 'com.ciba:http:0.0.10'
-    api 'com.ciba:datasynchronize:0.1.6'
+    api 'com.ciba:datasynchronize:0.1.7'
 }
