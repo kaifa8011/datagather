@@ -1,5 +1,7 @@
 package com.ciba.datagather.util.device;
 
+import com.ciba.datagather.util.DataGatherLog;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,14 +38,14 @@ public class CpuUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (fr != null){
                 try {
                     fr.close();
                     fr = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (localBufferedReader != null){
@@ -51,7 +53,7 @@ public class CpuUtil {
                     localBufferedReader.close();
                     localBufferedReader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }

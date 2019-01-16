@@ -1,5 +1,7 @@
 package com.ciba.datagather.util.device;
 
+import com.ciba.datagather.util.DataGatherLog;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class TrafficUtil {
                 textSent = sentLine;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             try {
                 if (brReceivedFileReader != null) {
@@ -60,13 +62,13 @@ public class TrafficUtil {
                     brSent = null;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                DataGatherLog.innerI(e.getMessage());
             }
         }
         try {
             return Long.parseLong(textReceived) + Long.parseLong(textSent);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return 0;
     }

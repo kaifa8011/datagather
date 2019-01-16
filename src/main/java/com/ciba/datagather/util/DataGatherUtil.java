@@ -206,7 +206,7 @@ public class DataGatherUtil {
                 deviceData.setNd(jsonArray.toString());
                 jsonArray = null;
             } catch (Exception e) {
-                e.printStackTrace();
+                DataGatherLog.innerI(e.getMessage());
             }
         }
     }

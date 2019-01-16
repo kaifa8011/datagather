@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class PackageUtil {
                 return packageInfo.versionName;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return "";
     }
@@ -49,7 +50,7 @@ public class PackageUtil {
                 return packageInfo.versionCode;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return 0;
     }
@@ -61,7 +62,7 @@ public class PackageUtil {
         try {
             return getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
             return null;
         }
     }
@@ -101,7 +102,7 @@ public class PackageUtil {
             }
             installedList.clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return customPackageInfoList;
     }

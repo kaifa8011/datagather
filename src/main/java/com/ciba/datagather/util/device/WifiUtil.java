@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datasynchronize.entity.WifiOtherDeviceData;
 
 import java.io.BufferedReader;
@@ -74,7 +75,7 @@ public class WifiUtil {
             }
             customWifiInfo.setSsid(ssid);
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return customWifiInfo;
     }
@@ -113,7 +114,7 @@ public class WifiUtil {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (socket != null) {
                 socket.close();
@@ -149,17 +150,15 @@ public class WifiUtil {
                 }
                 wifiOtherDeviceDataList.add(new WifiOtherDeviceData(tokens[0], mac, tokens[2]));
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                     reader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (fileReader != null) {
@@ -167,7 +166,7 @@ public class WifiUtil {
                     fileReader.close();
                     fileReader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }

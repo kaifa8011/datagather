@@ -30,14 +30,14 @@ public class AdbShellUtil {
             reader.close();
             content = output.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                     reader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }

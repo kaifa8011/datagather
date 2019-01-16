@@ -16,6 +16,7 @@ import com.ciba.datagather.constant.Constant;
 import com.ciba.datagather.entity.CustomBaseStation;
 import com.ciba.datagather.listener.CustomPhoneStateListener;
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,7 +88,7 @@ public class BaseStationUtil {
                         String neighboringCellInfoJson = jsonArray.toString();
                         customBaseStation.setStbif(neighboringCellInfoJson);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        DataGatherLog.innerI(e.getMessage());
                     }
                 }
                 CellLocation cellLocation = telephonyManager.getCellLocation();
@@ -116,7 +117,7 @@ public class BaseStationUtil {
                 customBaseStation.setLac(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return customBaseStation;
     }

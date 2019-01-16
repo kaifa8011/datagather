@@ -1,5 +1,6 @@
 package com.ciba.datagather.handler;
 
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datagather.util.device.PackageUtil;
 import com.ciba.datasynchronize.manager.DataCacheManager;
 
@@ -71,19 +72,23 @@ public class CrashHandler implements UncaughtExceptionHandler {
             DataCacheManager.getInstance().saveCrashData(jsonObject.toString());
             jsonObject = null;
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
                     writer = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (printWriter != null) {
-                printWriter.close();
-                printWriter = null;
+                try {
+                    printWriter.close();
+                    printWriter = null;
+                } catch (Exception e) {
+                    DataGatherLog.innerI(e.getMessage());
+                }
             }
         }
     }

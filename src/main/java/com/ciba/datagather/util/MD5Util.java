@@ -21,7 +21,7 @@ public class MD5Util {
             }
             return sb.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return null;
     }

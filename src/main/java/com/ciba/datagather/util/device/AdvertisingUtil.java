@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -41,12 +42,14 @@ public class AdvertisingUtil {
                 try {
                     AdvertisingInterface adInterface = new AdvertisingInterface(connection.getBinder());
                     return adInterface.getId();
+                } catch (Exception e) {
+                    DataGatherLog.innerI(e.getMessage());
                 } finally {
                     DataGatherManager.getInstance().getContext().unbindService(connection);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return "";
     }
@@ -60,7 +63,7 @@ public class AdvertisingUtil {
             try {
                 this.queue.put(service);
             } catch (Exception e) {
-                e.printStackTrace();
+                DataGatherLog.innerI(e.getMessage());
             }
         }
 
@@ -92,12 +95,14 @@ public class AdvertisingUtil {
         public String getId() throws RemoteException {
             Parcel data = Parcel.obtain();
             Parcel reply = Parcel.obtain();
-            String id;
+            String id = null;
             try {
                 data.writeInterfaceToken("com.google.android.gms.ads.identifier.internal.IAdvertisingIdService");
                 binder.transact(1, data, reply, 0);
                 reply.readException();
                 id = reply.readString();
+            } catch (Exception e) {
+                DataGatherLog.innerI(e.getMessage());
             } finally {
                 reply.recycle();
                 data.recycle();

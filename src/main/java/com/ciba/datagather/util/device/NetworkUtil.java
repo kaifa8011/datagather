@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.ciba.datagather.constant.Constant;
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -32,7 +33,7 @@ public class NetworkUtil {
             }
             return info.isAvailable();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return false;
     }
@@ -42,7 +43,7 @@ public class NetworkUtil {
             WifiManager wm = (WifiManager) DataGatherManager.getInstance().getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             return (wm != null && WifiManager.WIFI_STATE_ENABLED == wm.getWifiState());
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return false;
     }
@@ -110,7 +111,7 @@ public class NetworkUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return hostIp;
     }
@@ -139,7 +140,7 @@ public class NetworkUtil {
             }
             return mac;
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return DEFAULT_MAC;
     }
@@ -171,7 +172,7 @@ public class NetworkUtil {
                 return res1.toString();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return DEFAULT_MAC;
     }

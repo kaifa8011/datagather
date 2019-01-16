@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import com.ciba.datagather.constant.Constant;
 import com.ciba.datagather.entity.CustomPhoneState;
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 
 import java.lang.reflect.Method;
 
@@ -67,7 +68,7 @@ public class PhoneStateUtil {
             }
             getImeiAndMeid(DataGatherManager.getInstance().getContext(), customPhoneState);
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return customPhoneState;
     }
@@ -108,7 +109,7 @@ public class PhoneStateUtil {
                 customPhoneState.setImei2(deviceId3);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
     }
 }

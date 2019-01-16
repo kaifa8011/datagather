@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.ciba.datagather.entity.CustomLocation;
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datasynchronize.manager.DataCacheManager;
 import com.ciba.datasynchronize.manager.LoaderUploaderManager;
 
@@ -41,7 +42,7 @@ public class LocationUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         CustomLocation customLocation = new CustomLocation(lat, lng, country, System.currentTimeMillis(), 0.0f);
         try {
@@ -85,7 +86,7 @@ public class LocationUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         if (customLocation.getLat() == 0 || customLocation.getLat() == 0
                 || System.currentTimeMillis() - DataCacheManager.getInstance().getLngLatTime() >= LOCATION_INTERVALS) {

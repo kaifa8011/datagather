@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -44,14 +45,14 @@ public class BlueToothUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (lineNumberReader != null){
                 try {
                     lineNumberReader.close();
                     lineNumberReader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (inputStreamReader != null){
@@ -59,7 +60,7 @@ public class BlueToothUtil {
                     inputStreamReader.close();
                     inputStreamReader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }
@@ -75,16 +76,15 @@ public class BlueToothUtil {
         try {
             reader = new FileReader(fileName);
             text = loadReaderAsString(reader);
-
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                     reader = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }
@@ -106,7 +106,7 @@ public class BlueToothUtil {
         try {
             return android.provider.Settings.Secure.getString(context.getContentResolver(), "bluetooth_address");
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return "";
     }

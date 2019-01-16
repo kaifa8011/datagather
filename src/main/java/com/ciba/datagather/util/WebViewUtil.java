@@ -43,7 +43,7 @@ public class WebViewUtil {
                 webView = null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
     }
 

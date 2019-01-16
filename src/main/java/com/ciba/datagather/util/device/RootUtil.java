@@ -6,6 +6,8 @@ package com.ciba.datagather.util.device;
  * @description : replace your description
  */
 
+import com.ciba.datagather.util.DataGatherLog;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class RootUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             try {
                 if (os != null) {
@@ -90,8 +92,8 @@ public class RootUtil {
                     errorResult.close();
                     errorResult = null;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                DataGatherLog.innerI(e.getMessage());
             }
 
 

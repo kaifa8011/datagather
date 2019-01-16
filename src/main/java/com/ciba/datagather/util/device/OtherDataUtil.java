@@ -2,6 +2,8 @@ package com.ciba.datagather.util.device;
 
 import android.os.Build;
 
+import com.ciba.datagather.util.DataGatherLog;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,7 +21,6 @@ public class OtherDataUtil {
      */
     public static String getCid() {
         String str1 = null;
-        Object localOb;
         FileReader fileReader1 = null;
         FileReader fileReader2 = null;
         BufferedReader bufferedReader1 = null;
@@ -27,8 +28,8 @@ public class OtherDataUtil {
         try {
             fileReader1 = new FileReader("/sys/block/mmcblk0/device/type");
             bufferedReader1 = new BufferedReader(fileReader1);
-            localOb = bufferedReader1.readLine().toLowerCase().contentEquals("mmc");
-            if (localOb != null) {
+            boolean localOb = bufferedReader1.readLine().toLowerCase().contentEquals("mmc");
+            if (localOb) {
                 str1 = "/sys/block/mmcblk0/device/";
             }
             // nand ID
@@ -36,14 +37,14 @@ public class OtherDataUtil {
             bufferedReader2 = new BufferedReader(fileReader2);
             str1 = bufferedReader2.readLine();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         } finally {
             if (fileReader1 != null) {
                 try {
                     fileReader1.close();
                     fileReader1 = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (fileReader2 != null) {
@@ -51,7 +52,7 @@ public class OtherDataUtil {
                     fileReader2.close();
                     fileReader2 = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (bufferedReader1 != null) {
@@ -59,7 +60,7 @@ public class OtherDataUtil {
                     bufferedReader1.close();
                     bufferedReader1 = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
             if (bufferedReader2 != null) {
@@ -67,7 +68,7 @@ public class OtherDataUtil {
                     bufferedReader2.close();
                     bufferedReader2 = null;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DataGatherLog.innerI(e.getMessage());
                 }
             }
         }
@@ -76,30 +77,33 @@ public class OtherDataUtil {
 
     public static String getUniquePsuedoID() {
         String serial = null;
-        String deviceId = "35" +
-                Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
-
-                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
-
-                Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
-
-                Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
-
-                Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
-
-                Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
-
-                Build.USER.length() % 10; //13 位
-
+        String deviceId = null;
         try {
+            deviceId = "35" +
+                    Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+
+                    Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+
+                    Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+
+                    Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+
+                    Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+
+                    Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+
+                    Build.USER.length() % 10; //13 位
             serial = android.os.Build.class.getField("SERIAL").get(null).toString();
             //API>=9 使用serial号
             return new UUID(deviceId.hashCode(), serial.hashCode()).toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
             //serial需要一个初始化
             // 随便一个初始化
             serial = "serial";
+        }
+        if (deviceId == null) {
+            deviceId = "";
         }
         //使用硬件信息拼凑出来的15位号码
         return new UUID(deviceId.hashCode(), serial.hashCode()).toString();

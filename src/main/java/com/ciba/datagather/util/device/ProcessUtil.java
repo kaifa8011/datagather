@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datagather.process.AndroidProcesses;
 import com.ciba.datagather.process.models.AndroidAppProcess;
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datasynchronize.entity.ProcessData;
 import com.ciba.datasynchronize.util.TimeUtil;
 
@@ -71,7 +72,7 @@ public class ProcessUtil {
             }
             processes.clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            DataGatherLog.innerI(e.getMessage());
         }
         return processList;
     }
