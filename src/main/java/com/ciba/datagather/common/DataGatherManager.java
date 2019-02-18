@@ -1,6 +1,5 @@
 package com.ciba.datagather.common;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.os.Looper;
@@ -17,11 +16,13 @@ import com.ciba.datasynchronize.common.DataSynchronizeManager;
  * @date 2018/12/3
  */
 public class DataGatherManager {
-    @SuppressLint("StaticFieldLeak")
+    /**
+     * TODO ：更新SDK版本
+     */
+    private static final String SDK_VERSION = "0.2.5";
     private static DataGatherManager instance;
     private boolean checkRoot;
     private Context context;
-    private CrashHandler crashHandler;
 
     private DataGatherManager() {
     }
@@ -64,8 +65,8 @@ public class DataGatherManager {
      * 初始化日志
      */
     private void initGather(Context context) {
-        this.crashHandler = new CrashHandler();
-        this.crashHandler.init();
+        CrashHandler crashHandler = new CrashHandler();
+        crashHandler.init();
 
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
@@ -90,4 +91,7 @@ public class DataGatherManager {
         return checkRoot;
     }
 
+    public String getSdkVersion() {
+        return SDK_VERSION;
+    }
 }

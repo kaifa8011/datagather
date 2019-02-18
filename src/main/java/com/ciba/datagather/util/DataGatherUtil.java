@@ -11,6 +11,8 @@ import com.ciba.datagather.entity.CustomLocation;
 import com.ciba.datagather.entity.CustomPhoneState;
 import com.ciba.datagather.entity.CustomWifiInfo;
 import com.ciba.datagather.util.device.ProcessUtil;
+import com.ciba.datasynchronize.common.DataSynchronizeManager;
+import com.ciba.datasynchronize.entity.CustomBluetoothInfo;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
 import com.ciba.datasynchronize.entity.WifiOtherDeviceData;
@@ -110,7 +112,9 @@ public class DataGatherUtil {
      * 手机蓝牙信息
      */
     private static void gatherBluetoothData(DeviceData deviceData) {
-        deviceData.setBtmac(BlueToothUtil.getMac());
+        CustomBluetoothInfo bluetoothInfo = BlueToothUtil.getBluetoothInfo();
+        deviceData.setBtmac(bluetoothInfo.getBluetoothDevice() == null ? "" : bluetoothInfo.getBluetoothDevice().getMac());
+        deviceData.setBluetoothInfo(bluetoothInfo);
     }
 
     /**

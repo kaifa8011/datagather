@@ -33,7 +33,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         if (!handleException(ex) && mDefaultHandler != null) {
             // 如果用户没有处理则让系统默认的异常处理器来处理
-            mDefaultHandler.uncaughtException(thread, ex);
+            try {
+                mDefaultHandler.uncaughtException(thread, ex);
+            } catch (Exception e){
+                DataGatherLog.innerI(e.getMessage());
+            }
         } else {
             //出现异常直接退出程序
         }

@@ -1,5 +1,6 @@
 package com.ciba.datagather.util;
 
+import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
@@ -14,10 +15,7 @@ import java.util.List;
  * @date 2018/12/6
  */
 public class DataArrangeUtil {
-    private static long millis;
-
     public static void dataGather(boolean withoutSystemApp, boolean appOnly, boolean geocoder, boolean getSignalStrengths) {
-        millis = System.currentTimeMillis();
         DataGatherUtil.gatherDeviceData(withoutSystemApp, appOnly, geocoder, getSignalStrengths, new DeviceDataGatherListener() {
             @Override
             public void onDeviceDataGather(String crashData
@@ -34,6 +32,6 @@ public class DataArrangeUtil {
             , List<CustomPackageInfo> installPackageList
             , List<ProcessData> appProcessList) {
         DataSynchronizeManager.getInstance().getDataGatherListener().onDataGather(crashData, deviceData
-                , installPackageList, appProcessList);
+                , installPackageList, appProcessList, DataGatherManager.getInstance().getSdkVersion());
     }
 }
