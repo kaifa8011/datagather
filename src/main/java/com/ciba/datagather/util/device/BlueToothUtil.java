@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-import android.util.Log;
 
+import com.ciba.datagather.util.DataGatherLog;
 import com.ciba.datasynchronize.entity.CustomBluetoothInfo;
 
 import java.lang.reflect.Field;
@@ -63,7 +63,7 @@ public class BlueToothUtil {
                 bluetoothMacAddress = (String) btManagerService.getClass().getMethod("getAddress").invoke(btManagerService);
             }
         } catch (Exception e) {
-            Log.e("TAG", "getBluetoothAddress: " + e.getMessage());
+            DataGatherLog.innerI("getBluetoothAddress: " + e.getMessage());
         }
         bluetoothDevice.setMac(bluetoothMacAddress);
         bluetoothInfo.setBluetoothDevice(bluetoothDevice);
