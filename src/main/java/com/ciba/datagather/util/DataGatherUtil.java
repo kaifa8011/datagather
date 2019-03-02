@@ -225,5 +225,6 @@ public class DataGatherUtil {
         deviceData.setOsVersion(Build.VERSION.RELEASE);
         deviceData.setVendor(Build.MANUFACTURER);
         deviceData.setModelNo(Build.MODEL);
+        deviceData.setWordSize(DisplayUtil.getFontOrUiScale() + "");
     }
 }

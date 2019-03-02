@@ -1,8 +1,13 @@
 package com.ciba.datagather.util.device;
 
 import android.content.res.Resources;
+import android.os.Build;
+import android.util.DisplayMetrics;
 
 import com.ciba.datagather.common.DataGatherManager;
+import com.ciba.datagather.util.DataGatherLog;
+
+import java.lang.reflect.Method;
 
 /**
  * @author ciba
@@ -46,7 +51,39 @@ public class DisplayUtil {
         return getResources().getDisplayMetrics().densityDpi;
     }
 
-    public static Resources getResources(){
+    public static Resources getResources() {
         return DataGatherManager.getInstance().getContext().getResources();
+    }
+
+    public static float getFontOrUiScale() {
+        float scale = 1f;
+        try {
+            scale = getResources().getConfiguration().fontScale;
+            if (scale == 1) {
+                float densityDpi = getDensityDpi();
+                int deviceDensity = getDeviceDensity();
+                if (densityDpi > 0 && deviceDensity > 0) {
+                    scale = densityDpi / deviceDensity;
+                }
+            }
+        } catch (Exception e) {
+            DataGatherLog.innerI(e.getMessage() + "");
+        }
+        return scale;
+    }
+
+    public static int getDeviceDensity() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return DisplayMetrics.DENSITY_DEVICE_STABLE;
+        }
+        try {
+            Class<?> cls = Class.forName("android.util.DisplayMetrics");
+            Method method = cls.getDeclaredMethod("getDeviceDensity");
+            method.setAccessible(true);
+            return (Integer) method.invoke(cls);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
