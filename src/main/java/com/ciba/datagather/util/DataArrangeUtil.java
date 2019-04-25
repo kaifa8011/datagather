@@ -1,6 +1,5 @@
 package com.ciba.datagather.util;
 
-import com.ciba.datagather.common.DataGatherManager;
 import com.ciba.datasynchronize.entity.CustomPackageInfo;
 import com.ciba.datasynchronize.entity.DeviceData;
 import com.ciba.datagather.listener.DeviceDataGatherListener;
@@ -32,6 +31,6 @@ public class DataArrangeUtil {
             , List<CustomPackageInfo> installPackageList
             , List<ProcessData> appProcessList) {
         DataSynchronizeManager.getInstance().getDataGatherListener().onDataGather(crashData, deviceData
-                , installPackageList, appProcessList, DataGatherManager.getInstance().getSdkVersion());
+                , installPackageList, appProcessList);
     }
 }

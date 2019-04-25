@@ -91,9 +91,13 @@ public class ProcessUtil {
         int pid = android.os.Process.myPid();
         String processName = "";
         ActivityManager manager = (ActivityManager) DataGatherManager.getInstance().getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
-            if (process.pid == pid) {
-                processName = process.processName;
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = manager.getRunningAppProcesses();
+        if (runningAppProcesses != null && runningAppProcesses.size() > 0) {
+            for (int i = 0; i < runningAppProcesses.size(); i++) {
+                ActivityManager.RunningAppProcessInfo process = runningAppProcesses.get(i);
+                if (process.pid == pid) {
+                    processName = process.processName;
+                }
             }
         }
         return processName;

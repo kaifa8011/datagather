@@ -19,7 +19,7 @@ public class DataGatherManager {
     /**
      * TODO ：更新SDK版本
      */
-    private static final String SDK_VERSION = "0.2.8";
+    private static final String SDK_VERSION = "0.2.9";
     private static DataGatherManager instance;
     private boolean checkRoot;
     private Context context;
@@ -55,7 +55,7 @@ public class DataGatherManager {
 
         this.context = context.getApplicationContext();
         this.checkRoot = checkRoot;
-        DataSynchronizeManager.getInstance().init(context);
+        DataSynchronizeManager.getInstance().init(context, DataGatherManager.getInstance().getSdkVersion());
         if (ProcessUtil.isMainProcess()) {
             initGather(context);
         }
