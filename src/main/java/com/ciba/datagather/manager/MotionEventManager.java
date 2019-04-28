@@ -105,7 +105,7 @@ public class MotionEventManager {
      * 上传操作数据
      */
     private void uploadOptionData() {
-        LoaderUploaderManager.getInstance().uploadMotionEventData(motionEventDataList);
+        LoaderUploaderManager.getInstance().uploadOperationData(motionEventDataList);
         motionEventDataList.clear();
     }
 
