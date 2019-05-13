@@ -8,7 +8,6 @@ import com.ciba.datasynchronize.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author ciba
@@ -33,77 +32,30 @@ public class OpertionDataManager {
     }
 
     public void uploadOpertionData(String operationType, String scheme) {
-        OperationData opertionData = createOpertionData(operationType, scheme, null, null, null, null, null, null);
+        CustomOperationData opertionData = createOpertionData(operationType, scheme);
         uploadOpertionData(opertionData);
     }
 
-    public void uploadOpertionData(Map<String, String> params) {
-        if (params == null) {
-            return;
-        }
-        OperationData opertionData = createOpertionData(params.get("operationType")
-                , params.get("scheme")
-                , params.get("startCooX")
-                , params.get("endCooX")
-                , params.get("startCooY")
-                , params.get("endCooY")
-                , params.get("startTime")
-                , params.get("endTime"));
-        uploadOpertionData(opertionData);
-    }
-
-    public void uploadOpertionDatas(List<Map<String, String>> params) {
-        if (params == null || params.isEmpty()) {
+    public void uploadOpertionData(CustomOperationData customOperationData) {
+        if (customOperationData == null) {
             return;
         }
         List<OperationData> operationDataList = new ArrayList<>();
-        for (int i = 0; i < params.size(); i++) {
-            Map<String, String> param = params.get(i);
-            OperationData opertionData = createOpertionData(param.get("operationType")
-                    , param.get("scheme")
-                    , param.get("startCooX")
-                    , param.get("endCooX")
-                    , param.get("startCooY")
-                    , param.get("endCooY")
-                    , param.get("startTime")
-                    , param.get("endTime"));
-            operationDataList.add(opertionData);
-        }
+        operationDataList.add(customOperationData);
         uploadOpertionData(operationDataList);
     }
 
-    private OperationData createOpertionData(String operationType
-            , String scheme
-            , String startCooX
-            , String endCooX
-            , String startCooY
-            , String endCooY
-            , String startTime
-            , String endTime) {
-        OperationData operationData = new OperationData();
-        operationData.setOperationType(operationType);
-        operationData.setMachineType(1);
-        operationData.setScheme(scheme);
-        operationData.setStartCooX(startCooX);
-        operationData.setEndCooX(endCooX);
-        operationData.setStartCooY(startCooY);
-        operationData.setEndCooY(endCooY);
-        String currentTime = TimeUtil.getCurrentTime();
-        operationData.setStartTime(startTime == null ? currentTime : startTime);
-        operationData.setEndTime(endTime == null ? currentTime : endTime);
-        operationData.setPackageName(PackageUtil.getPackageName());
-        operationData.setVersionNo(PackageUtil.getVersionName());
-        operationData.setMachineId(DataCacheManager.getInstance().getMachineId());
-        return operationData;
-    }
-
-    private void uploadOpertionData(OperationData operationData) {
-        if (operationData == null) {
+    public void uploadOpertionDatas(List<CustomOperationData> operationDatas) {
+        if (operationDatas == null || operationDatas.isEmpty()) {
             return;
         }
         List<OperationData> operationDataList = new ArrayList<>();
-        operationDataList.add(operationData);
+        operationDataList.addAll(operationDatas);
         uploadOpertionData(operationDataList);
+    }
+
+    private CustomOperationData createOpertionData(String operationType, String scheme) {
+        return new CustomOperationData(operationType, scheme);
     }
 
     private void uploadOpertionData(List<OperationData> operationDataList) {
@@ -111,6 +63,18 @@ public class OpertionDataManager {
             return;
         }
         LoaderUploaderManager.getInstance().uploadOperationData(operationDataList);
+    }
+
+    public static class CustomOperationData extends OperationData {
+        public CustomOperationData(String operationType, String scheme) {
+            setOperationType(operationType);
+            setMachineType(1);
+            setScheme(scheme);
+            setStartTime(TimeUtil.getCurrentTime());
+            setPackageName(PackageUtil.getPackageName());
+            setVersionNo(PackageUtil.getVersionName());
+            setMachineId(DataCacheManager.getInstance().getMachineId());
+        }
     }
 
 }
