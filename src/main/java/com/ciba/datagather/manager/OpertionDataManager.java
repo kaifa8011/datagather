@@ -1,10 +1,8 @@
 package com.ciba.datagather.manager;
 
-import com.ciba.datagather.util.device.PackageUtil;
+import com.ciba.datagather.entity.CustomOperationData;
 import com.ciba.datasynchronize.entity.OperationData;
-import com.ciba.datasynchronize.manager.DataCacheManager;
 import com.ciba.datasynchronize.manager.LoaderUploaderManager;
-import com.ciba.datasynchronize.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,17 +62,4 @@ public class OpertionDataManager {
         }
         LoaderUploaderManager.getInstance().uploadOperationData(operationDataList);
     }
-
-    public static class CustomOperationData extends OperationData {
-        public CustomOperationData(String operationType, String scheme) {
-            setOperationType(operationType);
-            setMachineType(1);
-            setScheme(scheme);
-            setStartTime(TimeUtil.getCurrentTime());
-            setPackageName(PackageUtil.getPackageName());
-            setVersionNo(PackageUtil.getVersionName());
-            setMachineId(DataCacheManager.getInstance().getMachineId());
-        }
-    }
-
 }
