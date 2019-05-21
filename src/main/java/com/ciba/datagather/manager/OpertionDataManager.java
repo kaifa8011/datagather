@@ -2,6 +2,7 @@ package com.ciba.datagather.manager;
 
 import com.ciba.datagather.entity.CustomOperationData;
 import com.ciba.datasynchronize.entity.OperationData;
+import com.ciba.datasynchronize.manager.DataCacheManager;
 import com.ciba.datasynchronize.manager.LoaderUploaderManager;
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class OpertionDataManager {
             }
         }
         return instance;
+    }
+
+    public long getMachineId() {
+        return DataCacheManager.getInstance().getMachineId();
     }
 
     public void uploadOpertionData(String operationType, String scheme) {
