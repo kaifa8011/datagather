@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -46,9 +47,18 @@ public class PhoneStateUtil {
                 String imei = null;
                 boolean networkRoaming = false;
                 if (tm != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        try {
+                            imei = tm.getImei();
+                        } catch (Exception e) {
+                            DataGatherLog.innerI(e.getMessage());
+                        }
+                    }
                     imsi = tm.getSubscriberId();
                     iccid = tm.getSimSerialNumber();
-                    imei = tm.getDeviceId();
+                    if (TextUtils.isEmpty(imei)) {
+                        imei = tm.getDeviceId();
+                    }
                     networkRoaming = tm.isNetworkRoaming();
                 }
                 if (needDefaultValue) {
@@ -78,12 +88,14 @@ public class PhoneStateUtil {
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
+    @SuppressLint("MissingPermission")
     private static void getImeiAndMeid(Context ctx, CustomPhoneState customPhoneState) {
-        TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
-        if (manager == null) {
-            return;
-        }
         try {
+            TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
+            if (manager == null) {
+                return;
+            }
+
             Method method1 = manager.getClass().getMethod("getDeviceId", int.class);
             String deviceId = customPhoneState.getImei();
             if (deviceId != null && !Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION.equals(deviceId) && !Constant.GET_DATA_FAILED_MAYBE_NO_SIM.equals(deviceId)) {
@@ -107,6 +119,25 @@ public class PhoneStateUtil {
                 customPhoneState.setMeid(deviceId3);
             } else if (!deviceId3.equals(customPhoneState.getImei1())) {
                 customPhoneState.setImei2(deviceId3);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    String imei1 = manager.getImei(0);
+                    String imei2 = manager.getImei(1);
+                    String meid = manager.getMeid();
+                    if (!TextUtils.isEmpty(imei1)) {
+                        customPhoneState.setImei1(imei1);
+                    }
+                    if (!TextUtils.isEmpty(imei2)) {
+                        customPhoneState.setImei2(imei2);
+                    }
+                    if (!TextUtils.isEmpty(meid)) {
+                        customPhoneState.setMeid(meid);
+                    }
+                } catch (Exception e) {
+                    DataGatherLog.innerI(e.getMessage());
+                }
             }
         } catch (Exception e) {
             DataGatherLog.innerI(e.getMessage());

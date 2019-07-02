@@ -62,25 +62,29 @@ public class NetworkUtil {
      */
     public static String getCurrentNetType(String defaultType) {
         String type = defaultType;
-        ConnectivityManager cm = (ConnectivityManager) DataGatherManager.getInstance().getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        if (info == null) {
-            type = defaultType;
-        } else if (info.getType() == ConnectivityManager.TYPE_WIFI) {
-            type = "WIFI";
-        } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-            int subType = info.getSubtype();
-            if (subType == TelephonyManager.NETWORK_TYPE_CDMA || subType == TelephonyManager.NETWORK_TYPE_GPRS
-                    || subType == TelephonyManager.NETWORK_TYPE_EDGE) {
-                type = "2G";
-            } else if (subType == TelephonyManager.NETWORK_TYPE_UMTS || subType == TelephonyManager.NETWORK_TYPE_HSDPA
-                    || subType == TelephonyManager.NETWORK_TYPE_EVDO_A || subType == TelephonyManager.NETWORK_TYPE_EVDO_0
-                    || subType == TelephonyManager.NETWORK_TYPE_EVDO_B) {
-                type = "3G";
-            } else if (subType == 13) {
-                // LTE 13是3g到4g的过渡，是3.9G的全球标准
-                type = "4G";
+        try {
+            ConnectivityManager cm = (ConnectivityManager) DataGatherManager.getInstance().getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = cm.getActiveNetworkInfo();
+            if (info == null) {
+                type = defaultType;
+            } else if (info.getType() == ConnectivityManager.TYPE_WIFI) {
+                type = "WIFI";
+            } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+                int subType = info.getSubtype();
+                if (subType == TelephonyManager.NETWORK_TYPE_CDMA || subType == TelephonyManager.NETWORK_TYPE_GPRS
+                        || subType == TelephonyManager.NETWORK_TYPE_EDGE) {
+                    type = "2G";
+                } else if (subType == TelephonyManager.NETWORK_TYPE_UMTS || subType == TelephonyManager.NETWORK_TYPE_HSDPA
+                        || subType == TelephonyManager.NETWORK_TYPE_EVDO_A || subType == TelephonyManager.NETWORK_TYPE_EVDO_0
+                        || subType == TelephonyManager.NETWORK_TYPE_EVDO_B) {
+                    type = "3G";
+                } else if (subType == 13) {
+                    // LTE 13是3g到4g的过渡，是3.9G的全球标准
+                    type = "4G";
+                }
             }
+        } catch (Exception e){
+            DataGatherLog.innerI(e.getMessage());
         }
         return type;
     }
@@ -124,11 +128,11 @@ public class NetworkUtil {
     }
 
     public static String getMacAddressBelowVersionM() {
-        WifiManager wifi = (WifiManager) DataGatherManager.getInstance().getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifi == null) {
-            return DEFAULT_MAC;
-        }
         try {
+            WifiManager wifi = (WifiManager) DataGatherManager.getInstance().getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifi == null) {
+                return DEFAULT_MAC;
+            }
             WifiInfo info = wifi.getConnectionInfo();
             if (info == null) {
                 return DEFAULT_MAC;

@@ -36,20 +36,24 @@ public class BaseStationUtil {
      * @param handler：通过handler返回收集的字符串
      */
     public static void getSignalStrengths(long time, Handler handler) {
-        TelephonyManager telephonyManager = (TelephonyManager)
-                DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        CustomPhoneStateListener phoneStateListener = new CustomPhoneStateListener(handler);
-        if (telephonyManager == null) {
-            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
-            return;
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager)
+                    DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            CustomPhoneStateListener phoneStateListener = new CustomPhoneStateListener(handler);
+            if (telephonyManager == null) {
+                phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
+                return;
+            }
+            int simState = telephonyManager.getSimState();
+            if (TelephonyManager.SIM_STATE_ABSENT == simState || TelephonyManager.SIM_STATE_UNKNOWN == simState) {
+                phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
+                return;
+            }
+            phoneStateListener.sentMessageDelayed(time);
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        } catch (Exception e){
+            DataGatherLog.innerI(e.getMessage());
         }
-        int simState = telephonyManager.getSimState();
-        if (TelephonyManager.SIM_STATE_ABSENT == simState || TelephonyManager.SIM_STATE_UNKNOWN == simState) {
-            phoneStateListener.sentMessage(Constant.GET_DATA_FAILED_MAYBE_NO_SIM);
-            return;
-        }
-        phoneStateListener.sentMessageDelayed(time);
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
     /**
