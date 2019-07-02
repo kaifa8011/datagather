@@ -36,6 +36,13 @@ public class PhoneStateUtil {
         CustomPhoneState customPhoneState = new CustomPhoneState();
         try {
             String androidId = Settings.Secure.getString(DataGatherManager.getInstance().getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (TextUtils.isEmpty(androidId)) {
+                try {
+                    androidId = Settings.System.getString(DataGatherManager.getInstance().getContext().getContentResolver(), Settings.System.ANDROID_ID);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             customPhoneState.setAndroidId(androidId);
             customPhoneState.setDeviceType(isPad() ? 5 : 4);
 
@@ -57,7 +64,11 @@ public class PhoneStateUtil {
                     imsi = tm.getSubscriberId();
                     iccid = tm.getSimSerialNumber();
                     if (TextUtils.isEmpty(imei)) {
-                        imei = tm.getDeviceId();
+                        try {
+                            imei = tm.getDeviceId();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     networkRoaming = tm.isNetworkRoaming();
                 }
@@ -90,8 +101,9 @@ public class PhoneStateUtil {
 
     @SuppressLint("MissingPermission")
     private static void getImeiAndMeid(Context ctx, CustomPhoneState customPhoneState) {
+        TelephonyManager manager = null;
         try {
-            TelephonyManager manager = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
+            manager = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
             if (manager == null) {
                 return;
             }
@@ -120,27 +132,26 @@ public class PhoneStateUtil {
             } else if (!deviceId3.equals(customPhoneState.getImei1())) {
                 customPhoneState.setImei2(deviceId3);
             }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                try {
-                    String imei1 = manager.getImei(0);
-                    String imei2 = manager.getImei(1);
-                    String meid = manager.getMeid();
-                    if (!TextUtils.isEmpty(imei1)) {
-                        customPhoneState.setImei1(imei1);
-                    }
-                    if (!TextUtils.isEmpty(imei2)) {
-                        customPhoneState.setImei2(imei2);
-                    }
-                    if (!TextUtils.isEmpty(meid)) {
-                        customPhoneState.setMeid(meid);
-                    }
-                } catch (Exception e) {
-                    DataGatherLog.innerI(e.getMessage());
-                }
-            }
         } catch (Exception e) {
             DataGatherLog.innerI(e.getMessage());
+        }
+        if (manager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                String imei1 = manager.getImei(0);
+                String imei2 = manager.getImei(1);
+                String meid = manager.getMeid();
+                if (!TextUtils.isEmpty(imei1)) {
+                    customPhoneState.setImei1(imei1);
+                }
+                if (!TextUtils.isEmpty(imei2)) {
+                    customPhoneState.setImei2(imei2);
+                }
+                if (!TextUtils.isEmpty(meid)) {
+                    customPhoneState.setMeid(meid);
+                }
+            } catch (Exception e) {
+                DataGatherLog.innerI(e.getMessage());
+            }
         }
     }
 }
