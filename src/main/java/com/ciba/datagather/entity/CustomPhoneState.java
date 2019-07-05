@@ -109,7 +109,16 @@ public class CustomPhoneState {
     }
 
     public String getRealImei() {
-        return imei;
+        String realImei = imei;
+        if (TextUtils.isEmpty(realImei) || realImei.length() < 15) {
+            if (!TextUtils.isEmpty(imei1) && imei1.length() >= 15) {
+                realImei = imei1;
+            }
+            if (!TextUtils.isEmpty(imei2) && imei2.length() >= 15) {
+                realImei = imei2;
+            }
+        }
+        return realImei;
     }
 
     public void setImei(String imei) {
