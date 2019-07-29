@@ -82,7 +82,9 @@ public class LocationUtil {
                 if (locationList != null && locationList.size() > 0) {
                     Address address = locationList.get(0);
                     country = address.getCountryName() + "_" + address.getCountryCode();
-                    customLocation.setCountry(country);
+                    if (!TextUtils.isEmpty(country)) {
+                        customLocation.setCountry(country);
+                    }
                 }
             }
         } catch (Exception e) {

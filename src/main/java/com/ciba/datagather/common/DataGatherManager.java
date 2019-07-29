@@ -19,7 +19,7 @@ public class DataGatherManager {
     /**
      * TODO ：更新SDK版本
      */
-    private static final String SDK_VERSION = "0.3.7";
+    private static final String SDK_VERSION = "0.3.8";
     private static DataGatherManager instance;
     private boolean checkRoot;
     private Context context;

@@ -3,6 +3,7 @@ package com.ciba.datagather.util.device;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.telephony.CellLocation;
@@ -51,7 +52,7 @@ public class BaseStationUtil {
             }
             phoneStateListener.sentMessageDelayed(time);
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-        } catch (Exception e){
+        } catch (Exception e) {
             DataGatherLog.innerI(e.getMessage());
         }
     }
@@ -71,7 +72,16 @@ public class BaseStationUtil {
                 return customBaseStation;
             }
             int permission = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
-            if (permission == PackageManager.PERMISSION_GRANTED) {
+            int permissionFine = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+            boolean canGetStationData;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                canGetStationData = permission == PackageManager.PERMISSION_GRANTED && permissionFine == PackageManager.PERMISSION_GRANTED;
+            } else {
+                canGetStationData = permission == PackageManager.PERMISSION_GRANTED || permissionFine == PackageManager.PERMISSION_GRANTED;
+            }
+
+            if (canGetStationData) {
                 List<NeighboringCellInfo> neighboringCellInfoList = telephonyManager.getNeighboringCellInfo();
                 if (neighboringCellInfoList != null && neighboringCellInfoList.size() > 0) {
                     try {
