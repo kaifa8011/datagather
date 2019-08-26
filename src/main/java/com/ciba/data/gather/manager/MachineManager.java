@@ -1,5 +1,6 @@
 package com.ciba.data.gather.manager;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.ciba.data.gather.entity.CustomPhoneState;
@@ -67,23 +68,24 @@ public class MachineManager {
         String deviceId = phoneState.getAndroidId();
 
         String id;
-        if (mac != null) {
-            if (deviceId != null) {
+        if (!TextUtils.isEmpty(mac) && Build.VERSION.SDK_INT <= 28) {
+            if (!TextUtils.isEmpty(deviceId)) {
                 id = mac + deviceId;
             } else {
                 id = mac;
             }
-        } else if (imei != null) {
-            if (deviceId != null) {
+        } else if (!TextUtils.isEmpty(imei)) {
+            if (!TextUtils.isEmpty(deviceId)) {
                 id = imei + deviceId;
             } else {
                 id = imei;
             }
+        } else if (!TextUtils.isEmpty(deviceId)) {
+            id = deviceId;
         } else {
             id = getUUID();
         }
-        id = MD5Util.getMD5Code(id);
-        return id;
+        return MD5Util.getMD5Code(id);
     }
 
     public String getUUID() {

@@ -10,6 +10,7 @@ import com.ciba.data.gather.entity.CustomBaseStation;
 import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.entity.CustomPhoneState;
 import com.ciba.data.gather.entity.CustomWifiInfo;
+import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.gather.listener.DeviceDataGatherListener;
 import com.ciba.data.gather.common.DataGatherManager;
@@ -95,6 +96,8 @@ public class DataGatherUtil {
                 gatherBluetoothData(deviceData);
 
                 gatherOtherData(deviceData);
+
+                deviceData.setUqid(UniqueIdManager.getInstance().getUniqueId(DataGatherManager.getInstance().getContext()));
 
                 String crashData = DataCacheManager.getInstance().getCrashData();
 
