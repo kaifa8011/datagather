@@ -55,16 +55,16 @@ public class UniqueIdManager {
                 hasPermission = PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
             if (hasPermission) {
-                mUniqueId = getUniqueIdUp29(context);
+                mUniqueId = getUniqueIdInner(context);
             }
         }
         return mUniqueId;
     }
 
     /**
-     * Android 10 及以上获取本地唯一标识码
+     * 获取本地唯一标识码
      */
-    private String getUniqueIdUp29(Context context) {
+    private String getUniqueIdInner(Context context) {
         Cursor cursor = null;
         String uniqueId = null;
         FileInputStream inputStream = null;
@@ -104,15 +104,15 @@ public class UniqueIdManager {
             close(cursor, inputStream, fileDescriptor);
         }
         if (TextUtils.isEmpty(uniqueId)) {
-            uniqueId = createUniqueIdUp29(context);
+            uniqueId = createUniqueId(context);
         }
         return uniqueId;
     }
 
     /**
-     * Android 10 及以上创建本地唯一标识码
+     * 创建本地唯一标识码
      */
-    private String createUniqueIdUp29(Context context) {
+    private String createUniqueId(Context context) {
         ParcelFileDescriptor fileDescriptor = null;
         FileOutputStream outputStream = null;
         ContentResolver resolver = context.getContentResolver();
@@ -123,6 +123,9 @@ public class UniqueIdManager {
             ContentValues values = new ContentValues();
             if (Build.VERSION.SDK_INT < 29) {
                 uniqueIdFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), UNIQUE_ID_DISPLAY_NAME);
+                if (uniqueIdFile.exists()) {
+                    uniqueIdFile.delete();
+                }
                 values.put(MediaStore.Images.Media.DATA, uniqueIdFile.getAbsolutePath());
             }
             values.put(MediaStore.Images.Media.DISPLAY_NAME, UNIQUE_ID_DISPLAY_NAME);
