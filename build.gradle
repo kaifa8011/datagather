@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
+def VERSION = "0.4.6"
+
 android {
     compileSdkVersion 28
 
@@ -9,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName VERSION
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -37,7 +39,7 @@ publish {
     userOrg = 'kaifa8011ol'               // bintray注册的用户名
     groupId = 'com.ciba'
     artifactId = 'datagather'                // bintray创建的package
-    publishVersion = '0.4.5'
+    publishVersion = VERSION
 }
 
 dependencies {
@@ -45,6 +47,6 @@ dependencies {
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly 'com.android.support:appcompat-v7:28.0.0'
     api 'com.ciba:http:0.0.13'
-    api 'com.ciba:datasynchronize:0.4.2'
-//    api project(':datasynchronize')
+    releaseApi 'com.ciba:datasynchronize:0.4.2'
+    debugApi project(':datasynchronize')
 }

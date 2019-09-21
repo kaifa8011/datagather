@@ -9,6 +9,7 @@ import com.ciba.data.gather.handler.CrashHandler;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.synchronize.common.DataSynchronizeManager;
+import com.ciba.datagather.BuildConfig;
 
 /**
  * @author ciba
@@ -16,10 +17,7 @@ import com.ciba.data.synchronize.common.DataSynchronizeManager;
  * @date 2018/12/3
  */
 public class DataGatherManager {
-    /**
-     * TODO ：更新SDK版本
-     */
-    private static final String SDK_VERSION = "0.4.5";
+
     private static DataGatherManager instance;
     private boolean checkRoot;
     private Context context;
@@ -92,6 +90,6 @@ public class DataGatherManager {
     }
 
     public String getSdkVersion() {
-        return SDK_VERSION;
+        return BuildConfig.VERSION_NAME;
     }
 }
