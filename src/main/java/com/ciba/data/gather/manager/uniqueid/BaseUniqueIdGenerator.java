@@ -28,6 +28,30 @@ import static com.ciba.data.gather.util.FileUtils.close;
 public abstract class BaseUniqueIdGenerator {
     private static final String UNIQUE_ID_DISPLAY_NAME = "9493fc1f6f98527c0d455b074eecedbe";
 
+
+    /**
+     * 从已存在文件中(数据库中不存在该文件记录)读取id
+     *
+     * @param context
+     * @return
+     */
+    protected String readUniqueIdFromDirtyFile(Context context) {
+//        String uniqueId = null;
+//        //已存在文件，读取文件内容
+//        File uniqueIdFile = new File(getUniqueFileDir(), UNIQUE_ID_DISPLAY_NAME);
+//        if (uniqueIdFile.exists()) {
+//            //文件夹存在,读出文件中内容，删除文件
+//            uniqueId = FileUtils.readFile(uniqueIdFile.getAbsolutePath());
+//            boolean delete = uniqueIdFile.delete();
+//            LogUtils.e("delete = " + delete);
+//            if (!TextUtils.isEmpty(uniqueId)) {
+//                uniqueId = createUniqueId(context, uniqueId);
+//            }
+//        }
+//        return uniqueId;
+        return null;
+    }
+
     /**
      * 获取本地唯一标识码
      *
@@ -36,7 +60,7 @@ public abstract class BaseUniqueIdGenerator {
     String getUniqueId(UniqueIdChain chain) {
         Context context = chain.getContext();
         String uniqueId = getUniqueIdInner(context);
-        if (TextUtils.isEmpty(uniqueId)) {
+        if (TextUtils.isEmpty(uniqueId) && TextUtils.isEmpty(uniqueId = readUniqueIdFromDirtyFile(context))) {
             uniqueId = chain.process();
             //创建存储unique的文件
             if (!TextUtils.isEmpty(uniqueId)) {
@@ -149,6 +173,9 @@ public abstract class BaseUniqueIdGenerator {
                 resolver.delete(uri, null, null);
             }
             close(fileDescriptor, outputStream);
+            if (uniqueId == null) {
+                uniqueId = existUniqueId;
+            }
         }
         return uniqueId;
     }

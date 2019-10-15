@@ -28,7 +28,9 @@ import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.gather.util.device.RootUtil;
 import com.ciba.data.gather.util.device.WifiUtil;
 import com.ciba.data.synchronize.entity.CustomBluetoothInfo;
+import com.ciba.data.synchronize.entity.CustomPackageInfo;
 import com.ciba.data.synchronize.entity.DeviceData;
+import com.ciba.data.synchronize.entity.ProcessData;
 import com.ciba.data.synchronize.entity.WifiOtherDeviceData;
 import com.ciba.data.synchronize.manager.DataCacheManager;
 import com.ciba.http.manager.AsyncThreadPoolManager;
@@ -57,6 +59,7 @@ public class DataGatherUtil {
             , final boolean appOnly
             , final boolean geocoder
             , boolean getSignalStrengths
+            , final boolean isOnlyGetMachineId
             , final DeviceDataGatherListener deviceDataGatherListener) {
         if (deviceDataGatherListener == null) {
             return;
@@ -66,16 +69,16 @@ public class DataGatherUtil {
                 @Override
                 public void handleMessage(Message msg) {
                     final String signalStrength = (String) msg.obj;
-                    gatherDeviceData(withoutSystemApp, appOnly, geocoder, signalStrength, deviceDataGatherListener);
+                    gatherDeviceData(withoutSystemApp, appOnly, geocoder, signalStrength, isOnlyGetMachineId, deviceDataGatherListener);
                 }
             });
         } else {
-            gatherDeviceData(withoutSystemApp, appOnly, geocoder, Constant.GET_DATA_NULL, deviceDataGatherListener);
+            gatherDeviceData(withoutSystemApp, appOnly, geocoder, Constant.GET_DATA_NULL, isOnlyGetMachineId, deviceDataGatherListener);
         }
     }
 
     private static void gatherDeviceData(final boolean withoutSystemApp, final boolean appOnly, final boolean geocoder
-            , final String signalStrength, final DeviceDataGatherListener deviceDataGatherListener) {
+            , final String signalStrength, final boolean isOnlyGetMachineId, final DeviceDataGatherListener deviceDataGatherListener) {
         AsyncThreadPoolManager.getInstance().getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
@@ -101,11 +104,19 @@ public class DataGatherUtil {
 
                 String crashData = DataCacheManager.getInstance().getCrashData();
 
+                //若只是去获取machineId则不收集应用安装列表以及启动列表信息
+                List<CustomPackageInfo> customPackageInfos = null;
+                List<ProcessData> processDatas = null;
+                if (!isOnlyGetMachineId) {
+                    customPackageInfos = PackageUtil.getInstallPackageList(withoutSystemApp);
+                    processDatas = ProcessUtil.getAppProcessList(withoutSystemApp, appOnly);
+                }
+
                 // getInstallPackageList()获取应用名称安装列表多时比较耗时
                 deviceDataGatherListener.onDeviceDataGather(crashData
                         , deviceData
-                        , PackageUtil.getInstallPackageList(withoutSystemApp)
-                        , ProcessUtil.getAppProcessList(withoutSystemApp, appOnly));
+                        , customPackageInfos
+                        , processDatas);
             }
         });
     }

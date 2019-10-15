@@ -8,7 +8,9 @@ import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.handler.CrashHandler;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
+import com.ciba.data.synchronize.OnDeviceDataUpLoadListener;
 import com.ciba.data.synchronize.common.DataSynchronizeManager;
+import com.ciba.data.synchronize.manager.DataCacheManager;
 import com.ciba.datagather.BuildConfig;
 
 /**
@@ -69,7 +71,24 @@ public class DataGatherManager {
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
         }
-        DataArrangeUtil.dataGather(true, true, false, true);
+        DataArrangeUtil.dataGather(true, true, false, true, null, false);
+    }
+
+
+    /**
+     * 获取machineId给外部调用
+     *
+     * @param listener
+     */
+    public void getMachineId(OnDeviceDataUpLoadListener listener) {
+        //初始化判断
+        getContext();
+        long machineId = DataCacheManager.getInstance().getMachineId();
+        if (machineId == 0) {
+            DataArrangeUtil.dataGather(true, true, false, false, listener, true);
+        } else {
+            listener.onUploadSuccess(machineId);
+        }
     }
 
     /**

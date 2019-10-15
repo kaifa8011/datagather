@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.ciba.data.gather.util.LogUtils;
+
 import java.io.File;
 
 /**
@@ -15,7 +17,7 @@ import java.io.File;
  * @date 2019-09-19
  */
 public class ImageUniqueGenerator extends BaseUniqueIdGenerator {
-    
+
     @Override
     protected Uri getMediaUri() {
         return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -36,7 +38,7 @@ public class ImageUniqueGenerator extends BaseUniqueIdGenerator {
     String getUniqueId(UniqueIdChain chain) {
         Context context = chain.getContext();
         String uniqueId = getUniqueIdInner(context);
-        if (TextUtils.isEmpty(uniqueId)) {
+        if (TextUtils.isEmpty(uniqueId) && TextUtils.isEmpty(uniqueId = readUniqueIdFromDirtyFile(context))) {
             uniqueId = createUniqueId(context, null);
         }
         return uniqueId;
