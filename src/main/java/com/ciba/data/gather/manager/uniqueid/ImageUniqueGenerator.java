@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-
-import com.ciba.data.gather.util.LogUtils;
 
 import java.io.File;
 
@@ -18,11 +15,25 @@ import java.io.File;
  */
 public class ImageUniqueGenerator extends BaseUniqueIdGenerator {
 
+    public ImageUniqueGenerator(Context context) {
+        super(context);
+    }
+
     @Override
     protected Uri getMediaUri() {
         return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
     }
 
+
+    @Override
+    protected String getMediaFileSuffix() {
+        return ".png";
+    }
+
+    @Override
+    protected String getMediaFilePrefix() {
+        return "5eb63bbbe01eeed093cb22bb8f5acdc3";
+    }
 
     @Override
     protected File getUniqueFileDir() {
@@ -31,17 +42,18 @@ public class ImageUniqueGenerator extends BaseUniqueIdGenerator {
 
     @Override
     protected String getUniqueFileMimeType() {
-        return "image/*";
+        return "image/png";
     }
 
     @Override
-    String getUniqueId(UniqueIdChain chain) {
-        Context context = chain.getContext();
-        String uniqueId = getUniqueIdInner(context);
-        if (TextUtils.isEmpty(uniqueId) && TextUtils.isEmpty(uniqueId = readUniqueIdFromDirtyFile(context))) {
-            uniqueId = createUniqueId(context, null);
-        }
-        return uniqueId;
+    protected String getBucketDisplayName() {
+        return Environment.DIRECTORY_PICTURES;
+    }
+
+
+    @Override
+    protected String getMediaRawData() {
+        return "iVBORw0KGgoAAAANSUhEUgAAAAIAAAADAQMAAACDJEzCAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjAAMAAAYAAegKKqQAAAAASUVORK5CYII=";
     }
 
 }

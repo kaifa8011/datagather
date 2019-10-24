@@ -35,4 +35,7 @@ public class UniqueIdChain {
         return idGenerator.getUniqueId(next);
     }
 
+    public boolean isLastNode() {
+        return index >= mUniqueIdGenerators.size();
+    }
 }
