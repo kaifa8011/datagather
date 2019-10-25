@@ -12,6 +12,7 @@ import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.entity.CustomPhoneState;
 import com.ciba.data.gather.entity.CustomWifiInfo;
 import com.ciba.data.gather.listener.DeviceDataGatherListener;
+import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.AdvertisingUtil;
 import com.ciba.data.gather.util.device.BaseStationUtil;
@@ -101,6 +102,8 @@ public class DataGatherUtil {
                 gatherOtherData(deviceData);
 
                 deviceData.setUqid(UniqueIdManager.getInstance(DataGatherManager.getInstance().getContext()).getUniqueId());
+
+                deviceData.setOaid(OAIDManager.getInstance().getOAID());
 
                 String crashData = DataCacheManager.getInstance().getCrashData();
 

@@ -6,6 +6,7 @@ import android.os.Looper;
 
 import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.handler.CrashHandler;
+import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.synchronize.OnDeviceDataUpLoadListener;
@@ -67,7 +68,7 @@ public class DataGatherManager {
     private void initGather(Context context) {
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init();
-
+        OAIDManager.getInstance().init(context);
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
         }

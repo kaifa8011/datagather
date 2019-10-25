@@ -2,6 +2,8 @@ package com.ciba.data.gather.util;
 
 import android.util.Log;
 
+import com.ciba.datagather.BuildConfig;
+
 /**
  * @author parting_soul
  * @date 17-12-31
@@ -14,7 +16,7 @@ public class LogUtils {
     public static final int ERROR = 5;
     public static final int NONE = 6;
 
-    public static int currentLevel = VERBOSE;
+    private static int currentLevel = BuildConfig.DEBUG ? VERBOSE : ERROR;
 
     public static void v(String tag, String msg) {
         if (currentLevel <= VERBOSE) {
