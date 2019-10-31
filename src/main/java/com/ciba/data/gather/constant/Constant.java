@@ -11,7 +11,7 @@ public class Constant {
     public static final String GET_DATA_NULL = "未获取到";
 
     public static final String NETWORK_DEFAULT_TYPE = "";
-    public static final String KEY_ADMOBILE_OAID = "KEY_ADMOBILE_OAID";
+    public static final String KEY_CIBA_OAID = "KEY_CIBA_OAID";
 
     /**
      * Oaid库的初始化类路径

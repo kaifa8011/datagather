@@ -15,7 +15,7 @@ import com.ciba.data.synchronize.util.SPUtil;
  * @date 2019-10-24
  */
 public class OAIDManager {
-    private static OAIDManager instance;
+    private static volatile OAIDManager instance;
     private String mOAID;
 
     public static OAIDManager getInstance() {
@@ -35,19 +35,19 @@ public class OAIDManager {
     public void init(Context context) {
         if (ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
             OAIDDelegate oaidDelegate = new OAIDDelegate(context);
-            oaidDelegate.startGetOAID();
             oaidDelegate.setOnGetIdCallback(new OAIDDelegate.OnGetIdCallback() {
                 @Override
                 public void onIdGetSuccess(@NonNull String ids) {
-                    SPUtil.putString(Constant.KEY_ADMOBILE_OAID, ids);
+                    SPUtil.putString(Constant.KEY_CIBA_OAID, ids);
                 }
             });
+            oaidDelegate.startGetOAID();
         }
     }
 
     public String getOAID() {
         if (mOAID == null) {
-            mOAID = SPUtil.getString(Constant.KEY_ADMOBILE_OAID);
+            mOAID = SPUtil.getString(Constant.KEY_CIBA_OAID);
         }
         return mOAID;
     }

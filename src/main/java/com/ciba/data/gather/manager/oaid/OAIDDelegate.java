@@ -2,13 +2,16 @@ package com.ciba.data.gather.manager.oaid;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.bun.miitmdid.core.ErrorCode;
 import com.bun.miitmdid.core.JLibrary;
 import com.bun.miitmdid.core.MdidSdkHelper;
 import com.bun.miitmdid.supplier.IdSupplier;
 import com.ciba.callback.IIdentifierListenerImp;
-import com.ciba.data.gather.util.LogUtils;
+import com.ciba.data.gather.util.ExceptionUtils;
+import com.ciba.data.synchronize.util.StateUtil;
 
 /**
  * oaid获取
@@ -23,7 +26,11 @@ public class OAIDDelegate {
 
     public OAIDDelegate(@NonNull Context context) {
         this.mContext = context.getApplicationContext();
-        JLibrary.InitEntry(context);
+        try {
+            JLibrary.InitEntry(context);
+        } catch (Exception e) {
+            ExceptionUtils.printStackTrace(e);
+        }
     }
 
     public void setOnGetIdCallback(OnGetIdCallback callback) {
@@ -49,24 +56,33 @@ public class OAIDDelegate {
                 }
             }
         });
-        return MdidSdkHelper.InitSdk(cxt, true, listener);
+        int result = 0;
+        try {
+            result = MdidSdkHelper.InitSdk(cxt, true, listener);
+        } catch (Exception e) {
+            ExceptionUtils.printStackTrace(e);
+        }
+        return result;
     }
 
 
     public void startGetOAID() {
         int result = callFromReflect(mContext);
-        if (result == ErrorCode.INIT_ERROR_DEVICE_NOSUPPORT) {//不支持的设备
-
-        } else if (result == ErrorCode.INIT_ERROR_LOAD_CONFIGFILE) {//加载配置文件出错
-
-        } else if (result == ErrorCode.INIT_ERROR_MANUFACTURER_NOSUPPORT) {//不支持的设备厂商
-
-        } else if (result == ErrorCode.INIT_ERROR_RESULT_DELAY) {//获取接口是异步的，结果会在回调中返回，回调执行的回调可能在工作线程
-
-        } else if (result == ErrorCode.INIT_HELPER_CALL_ERROR) {//反射调用出错
-
+        String error = "";
+        if (result == ErrorCode.INIT_ERROR_DEVICE_NOSUPPORT) {
+            error = "不支持的设备";
+        } else if (result == ErrorCode.INIT_ERROR_LOAD_CONFIGFILE) {
+            error = "加载配置文件出错";
+        } else if (result == ErrorCode.INIT_ERROR_MANUFACTURER_NOSUPPORT) {
+            error = "不支持的设备厂商";
+        } else if (result == ErrorCode.INIT_ERROR_RESULT_DELAY) {
+            error = "获取接口是异步的，结果会在回调中返回，回调执行的回调可能在工作线程";
+        } else if (result == ErrorCode.INIT_HELPER_CALL_ERROR) {
+            error = "反射调用出错";
         }
-        LogUtils.d("oaid获取失败 " + result);
+        if (!StateUtil.checkFlag() && !TextUtils.isEmpty(error)) {
+            Log.e("OAIDDelegate", "startGetOAID: oaid获取失败 error " + error);
+        }
     }
 
     public interface OnGetIdCallback {
