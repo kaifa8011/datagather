@@ -14,6 +14,11 @@ public class Constant {
     public static final String KEY_CIBA_OAID = "KEY_CIBA_OAID";
 
     /**
+     * 该键不能被修改
+     */
+    public static final String KEY_CIBA_UNIQUE_ID = "KEY_CIBA_UNIQUE_ID";
+
+    /**
      * Oaid库的初始化类路径
      */
     public static final String OAID_LIBARY_CORE_PATH = "com.bun.miitmdid.core.JLibrary";

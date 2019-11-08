@@ -33,15 +33,18 @@ public class OAIDManager {
     }
 
     public void init(Context context) {
-        if (ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
-            OAIDDelegate oaidDelegate = new OAIDDelegate(context);
-            oaidDelegate.setOnGetIdCallback(new OAIDDelegate.OnGetIdCallback() {
-                @Override
-                public void onIdGetSuccess(@NonNull String ids) {
-                    SPUtil.putString(Constant.KEY_CIBA_OAID, ids);
-                }
-            });
-            oaidDelegate.startGetOAID();
+        try {
+            if (ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
+                OAIDDelegate oaidDelegate = new OAIDDelegate(context);
+                oaidDelegate.setOnGetIdCallback(new OAIDDelegate.OnGetIdCallback() {
+                    @Override
+                    public void onIdGetSuccess(@NonNull String ids) {
+                        SPUtil.putString(Constant.KEY_CIBA_OAID, ids);
+                    }
+                });
+                oaidDelegate.startGetOAID();
+            }
+        } catch (Exception e) {
         }
     }
 
