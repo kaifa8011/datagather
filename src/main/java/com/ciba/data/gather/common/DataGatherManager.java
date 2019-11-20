@@ -73,8 +73,8 @@ public class DataGatherManager {
     /**
      * 初始化日志
      */
-    public void initGather(Context context) {
-        if (Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
+    public void initGather() {
+        if (context != null && Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
             CrashHandler crashHandler = new CrashHandler();
             crashHandler.init();
             OAIDManager.getInstance().init(context);
