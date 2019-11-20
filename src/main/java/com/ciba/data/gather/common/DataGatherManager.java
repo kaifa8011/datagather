@@ -50,6 +50,17 @@ public class DataGatherManager {
      * @param checkRoot ：是否有必要检查ROOT状态
      */
     public void init(Context context, boolean checkRoot) {
+        boot(context, checkRoot);
+        initGather(context);
+    }
+
+    /**
+     * 初始化
+     *
+     * @param context   ：上下文
+     * @param checkRoot ：是否有必要检查ROOT状态
+     */
+    public void boot(Context context, boolean checkRoot) {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             throw new RuntimeException("Must call in the main thread!!");
         }
@@ -57,22 +68,21 @@ public class DataGatherManager {
         this.context = context.getApplicationContext();
         this.checkRoot = checkRoot;
         DataSynchronizeManager.getInstance().init(context, DataGatherManager.getInstance().getSdkVersion());
-        if (ProcessUtil.isMainProcess()) {
-            initGather(context);
-        }
     }
 
     /**
      * 初始化日志
      */
-    private void initGather(Context context) {
-        CrashHandler crashHandler = new CrashHandler();
-        crashHandler.init();
-        OAIDManager.getInstance().init(context);
-        if (context instanceof Application) {
-            ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
+    public void initGather(Context context) {
+        if (Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
+            CrashHandler crashHandler = new CrashHandler();
+            crashHandler.init();
+            OAIDManager.getInstance().init(context);
+            if (context instanceof Application) {
+                ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
+            }
+            DataArrangeUtil.dataGather(true, true, false, true, null, false);
         }
-        DataArrangeUtil.dataGather(true, true, false, true, null, false);
     }
 
 
