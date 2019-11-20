@@ -28,7 +28,7 @@ public class OAIDDelegate {
         this.mContext = context.getApplicationContext();
         try {
             JLibrary.InitEntry(context);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             ExceptionUtils.printStackTrace(e);
         }
     }
@@ -49,17 +49,21 @@ public class OAIDDelegate {
                 if (idSupplier == null) {
                     return;
                 }
-                String oaid = idSupplier.getOAID();
-                idSupplier.shutDown();
-                if (mListener != null) {
-                    mListener.onIdGetSuccess(oaid);
+                // 防止异步调用出现异常
+                try {
+                    String oaid = idSupplier.getOAID();
+                    idSupplier.shutDown();
+                    if (mListener != null) {
+                        mListener.onIdGetSuccess(oaid);
+                    }
+                } catch (Throwable e) {
                 }
             }
         });
         int result = 0;
         try {
             result = MdidSdkHelper.InitSdk(cxt, true, listener);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             ExceptionUtils.printStackTrace(e);
         }
         return result;

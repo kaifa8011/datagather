@@ -44,7 +44,7 @@ public class OAIDManager {
                 });
                 oaidDelegate.startGetOAID();
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
         }
     }
 

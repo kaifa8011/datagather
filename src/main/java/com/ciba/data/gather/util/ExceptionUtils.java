@@ -7,7 +7,7 @@ import com.ciba.datagather.BuildConfig;
  * @date 2019-09-20
  */
 public class ExceptionUtils {
-    public static void printStackTrace(Exception e) {
+    public static void printStackTrace(Throwable e) {
         if (BuildConfig.DEBUG) {
             e.printStackTrace();
         }
