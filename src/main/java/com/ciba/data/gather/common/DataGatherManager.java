@@ -51,7 +51,7 @@ public class DataGatherManager {
      */
     public void init(Context context, boolean checkRoot) {
         boot(context, checkRoot);
-        initGather(context);
+        initGather();
     }
 
     /**
@@ -106,9 +106,6 @@ public class DataGatherManager {
      * 获取上下文
      */
     public Context getContext() {
-        if (context == null) {
-            throw new RuntimeException("Must call init first!!");
-        }
         return context;
     }
 
