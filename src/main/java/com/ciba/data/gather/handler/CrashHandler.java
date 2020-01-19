@@ -16,6 +16,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 /**
  * <UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告>
  */
+@Deprecated
 public class CrashHandler implements UncaughtExceptionHandler {
     private Thread.UncaughtExceptionHandler mDefaultHandler;
 
@@ -35,7 +36,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             // 如果用户没有处理则让系统默认的异常处理器来处理
             try {
                 mDefaultHandler.uncaughtException(thread, ex);
-            } catch (Exception e){
+            } catch (Exception e) {
                 DataGatherLog.innerI(e.getMessage());
             }
         } else {
@@ -47,7 +48,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * <自定义错误处理，收集错误信息，发送错误报告等操作均在此完成>
      */
     private boolean handleException(Throwable ex) {
-        saveCrashInfo2File(ex);
+//        saveCrashInfo2File(ex);
         return false;
     }
 

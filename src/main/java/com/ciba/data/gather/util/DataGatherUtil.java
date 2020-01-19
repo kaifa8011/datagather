@@ -105,8 +105,6 @@ public class DataGatherUtil {
 
                 deviceData.setOaid(OAIDManager.getInstance().getOAID());
 
-                String crashData = DataCacheManager.getInstance().getCrashData();
-
                 //若只是去获取machineId则不收集应用安装列表以及启动列表信息
                 List<CustomPackageInfo> customPackageInfos = null;
                 List<ProcessData> processDatas = null;
@@ -116,7 +114,7 @@ public class DataGatherUtil {
                 }
 
                 // getInstallPackageList()获取应用名称安装列表多时比较耗时
-                deviceDataGatherListener.onDeviceDataGather(crashData
+                deviceDataGatherListener.onDeviceDataGather(null
                         , deviceData
                         , customPackageInfos
                         , processDatas);
