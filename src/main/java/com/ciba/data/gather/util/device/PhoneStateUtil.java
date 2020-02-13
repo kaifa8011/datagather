@@ -12,9 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.ciba.data.gather.common.DataGatherManager;
 import com.ciba.data.gather.constant.Constant;
 import com.ciba.data.gather.entity.CustomPhoneState;
-import com.ciba.data.gather.common.DataGatherManager;
 import com.ciba.data.gather.util.DataGatherLog;
 
 import java.lang.reflect.Method;
@@ -26,6 +26,16 @@ import java.lang.reflect.Method;
  */
 
 public class PhoneStateUtil {
+    private static boolean canGetPhoneStateInfo = true;
+
+    /**
+     * 在权限允许下是否可以获取设备信息
+     *
+     * @param canGetPhoneStateInfo
+     */
+    public static void setCanGetPhoneStateInfo(boolean canGetPhoneStateInfo) {
+        PhoneStateUtil.canGetPhoneStateInfo = canGetPhoneStateInfo;
+    }
 
     public static CustomPhoneState getPhoneState() {
         return getPhoneState(true);
@@ -47,7 +57,7 @@ public class PhoneStateUtil {
             customPhoneState.setDeviceType(isPad() ? 5 : 4);
 
             int per = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.READ_PHONE_STATE);
-            if (per == PackageManager.PERMISSION_GRANTED) {
+            if (canGetPhoneStateInfo && per == PackageManager.PERMISSION_GRANTED) {
                 TelephonyManager tm = (TelephonyManager) DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
                 String imsi = null;
                 String iccid = null;

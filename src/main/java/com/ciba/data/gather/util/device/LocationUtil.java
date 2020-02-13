@@ -10,8 +10,8 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.common.DataGatherManager;
+import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.util.DataGatherLog;
 import com.ciba.data.synchronize.manager.DataCacheManager;
 import com.ciba.data.synchronize.manager.LoaderUploaderManager;
@@ -27,6 +27,16 @@ import java.util.Locale;
 
 public class LocationUtil {
     private static final long LOCATION_INTERVALS = 7 * 24 * 60 * 60 * 1000;
+    private static boolean canUseLocation = true;
+
+    /**
+     * 定位数据在有权限下是否获取
+     *
+     * @param canUseLocation
+     */
+    public static void setCanUseLocation(boolean canUseLocation) {
+        LocationUtil.canUseLocation = canUseLocation;
+    }
 
     public static CustomLocation getCustomLocation(boolean geocoder) {
         String country = "CN";
@@ -49,7 +59,7 @@ public class LocationUtil {
             int per = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
             int per2 = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
 
-            if (per == PackageManager.PERMISSION_GRANTED) {
+            if (canUseLocation && per == PackageManager.PERMISSION_GRANTED) {
                 LocationManager locationManager = (LocationManager) DataGatherManager.getInstance().getContext().getSystemService(Context.LOCATION_SERVICE);
                 if (per2 == PackageManager.PERMISSION_GRANTED && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     // 从gps获取经纬度

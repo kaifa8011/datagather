@@ -5,9 +5,13 @@ import android.content.Context;
 import android.os.Looper;
 
 import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
+import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
+import com.ciba.data.gather.util.device.LocationUtil;
+import com.ciba.data.gather.util.device.PhoneStateUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
+import com.ciba.data.gather.util.device.WifiUtil;
 import com.ciba.data.synchronize.OnDeviceDataUpLoadListener;
 import com.ciba.data.synchronize.common.DataSynchronizeManager;
 import com.ciba.data.synchronize.manager.DataCacheManager;
@@ -36,6 +40,21 @@ public class DataGatherManager {
             }
         }
         return instance;
+    }
+
+
+    /**
+     * 设置数据收集的配置信息,在init方法或者initGather方法前调用
+     *
+     * @param config
+     */
+    public void setDataGatherConfig(DataGatherConfig config) {
+        if (config == null) {
+            return;
+        }
+        WifiUtil.setCanGetWifiInfo(config.isCanGetWifiInfo());
+        LocationUtil.setCanUseLocation(config.isCanUseLocation());
+        PhoneStateUtil.setCanGetPhoneStateInfo(config.isCanGetPhoneStateInfo());
     }
 
     public void init(Context context) {

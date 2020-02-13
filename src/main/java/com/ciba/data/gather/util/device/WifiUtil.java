@@ -9,8 +9,8 @@ import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import com.ciba.data.gather.entity.CustomWifiInfo;
 import com.ciba.data.gather.common.DataGatherManager;
+import com.ciba.data.gather.entity.CustomWifiInfo;
 import com.ciba.data.gather.util.DataGatherLog;
 import com.ciba.data.synchronize.entity.WifiOtherDeviceData;
 
@@ -32,6 +32,16 @@ import java.util.List;
 public class WifiUtil {
 
     private static final int TIME_OUT = 20;
+    private static boolean canGetWifiInfo = true;
+
+    /**
+     * 在权限允许下是否可以获取wifi信息
+     *
+     * @param canGetWifiInfo
+     */
+    public static void setCanGetWifiInfo(boolean canGetWifiInfo) {
+        WifiUtil.canGetWifiInfo = canGetWifiInfo;
+    }
 
     /**
      * 獲取WIFi信息
@@ -42,7 +52,7 @@ public class WifiUtil {
         CustomWifiInfo customWifiInfo = new CustomWifiInfo();
         try {
             int permission = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.ACCESS_WIFI_STATE);
-            if (permission != PackageManager.PERMISSION_GRANTED) {
+            if (!canGetWifiInfo || permission != PackageManager.PERMISSION_GRANTED) {
                 return customWifiInfo;
             }
             WifiManager wifiManager = (WifiManager) DataGatherManager.getInstance().getContext().getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
