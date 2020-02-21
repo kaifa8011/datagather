@@ -1,9 +1,12 @@
 package com.ciba.callback;
 
-import com.bun.miitmdid.core.IIdentifierListener;
-import com.bun.miitmdid.supplier.IdSupplier;
+
+import com.bun.supplier.IIdentifierListener;
+import com.bun.supplier.IdSupplier;
 
 /**
+ * 防止回调接口被混淆
+ *
  * @author parting_soul
  * @date 2019-10-24
  */

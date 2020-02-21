@@ -85,5 +85,5 @@ dependencies {
     api 'com.ciba:http:0.0.13'
     releaseApi 'com.ciba:datasynchronize:0.4.3'
     debugApi project(':datasynchronize')
-    compileOnly(name: 'miit_mdid_1.0.10', ext: 'aar')
+    compileOnly(name: 'msa_mdid_1.0.13', ext: 'aar')
 }

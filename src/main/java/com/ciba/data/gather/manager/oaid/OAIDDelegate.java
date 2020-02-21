@@ -8,7 +8,7 @@ import android.util.Log;
 import com.bun.miitmdid.core.ErrorCode;
 import com.bun.miitmdid.core.JLibrary;
 import com.bun.miitmdid.core.MdidSdkHelper;
-import com.bun.miitmdid.supplier.IdSupplier;
+import com.bun.supplier.IdSupplier;
 import com.ciba.callback.IIdentifierListenerImp;
 import com.ciba.data.gather.util.ExceptionUtils;
 import com.ciba.data.synchronize.util.StateUtil;
@@ -52,7 +52,6 @@ public class OAIDDelegate {
                 // 防止异步调用出现异常
                 try {
                     String oaid = idSupplier.getOAID();
-                    idSupplier.shutDown();
                     if (mListener != null) {
                         mListener.onIdGetSuccess(oaid);
                     }
