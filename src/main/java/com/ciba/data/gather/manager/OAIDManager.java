@@ -20,7 +20,7 @@ public class OAIDManager {
 
     public static OAIDManager getInstance() {
         if (instance == null) {
-            synchronized (UniqueIdManager.class) {
+            synchronized (OAIDManager.class) {
                 if (instance == null) {
                     instance = new OAIDManager();
                 }
