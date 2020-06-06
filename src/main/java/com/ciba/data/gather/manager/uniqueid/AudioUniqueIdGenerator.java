@@ -50,6 +50,16 @@ public class AudioUniqueIdGenerator extends BaseUniqueIdGenerator {
     }
 
     @Override
+    protected String getUniqueIdGenerateRuleKey() {
+        return "audio";
+    }
+
+    @Override
+    protected boolean isGenerateWhenException() {
+        return true;
+    }
+
+    @Override
     protected String getMediaFilePrefix() {
         return "50c01294df9d48902639978235bcb56c";
     }

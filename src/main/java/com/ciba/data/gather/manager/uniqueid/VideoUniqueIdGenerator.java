@@ -45,6 +45,16 @@ public class VideoUniqueIdGenerator extends BaseUniqueIdGenerator {
     }
 
     @Override
+    protected String getUniqueIdGenerateRuleKey() {
+        return null;
+    }
+
+    @Override
+    protected boolean isGenerateWhenException() {
+        return false;
+    }
+
+    @Override
     protected String getMediaRawData() {
         return "";
     }

@@ -13,9 +13,11 @@ import android.util.Base64;
 
 import com.ciba.data.gather.util.ExceptionUtils;
 import com.ciba.data.gather.util.FileUtils;
+import com.ciba.data.synchronize.util.SPUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.ciba.data.gather.util.FileUtils.close;
@@ -169,6 +171,9 @@ public abstract class BaseUniqueIdGenerator {
      * @return
      */
     final String createUniqueId(String existUniqueId) {
+        if (!isMatchGenerateRule()) {
+            return null;
+        }
         ParcelFileDescriptor fileDescriptor = null;
         FileOutputStream outputStream = null;
         ContentResolver resolver = mContext.getContentResolver();
@@ -276,5 +281,37 @@ public abstract class BaseUniqueIdGenerator {
     protected abstract String getUniqueFileMimeType();
 
     protected abstract String getBucketDisplayName();
+
+
+    /**
+     * 获取uniqueId文件生成规则的key
+     *
+     * @return
+     */
+    protected abstract String getUniqueIdGenerateRuleKey();
+
+
+    /**
+     * 符合生成规则
+     *
+     * @return
+     */
+    private boolean isMatchGenerateRule() {
+        boolean isCreate;
+        try {
+            Set<String> rules = SPUtil.getStringSet("marks");
+            isCreate = rules.contains(getUniqueIdGenerateRuleKey());
+        } catch (Exception e) {
+            isCreate = isGenerateWhenException();
+        }
+        return isCreate;
+    }
+
+    /**
+     * 指定异常情况下是否生成(配置信息获取失败)
+     *
+     * @return
+     */
+    protected abstract boolean isGenerateWhenException();
 
 }
