@@ -172,6 +172,9 @@ public class DataGatherUtil {
         deviceData.setPdunid(OtherDataUtil.getUniquePsuedoID());
         deviceData.setCputy(CpuUtil.getCpuHardware());
 
+        // 是否有外部存储权限
+        deviceData.setHasReadExternalPermission(PermissionUtils.hasExternalPermission() ? "1" : "0");
+
         deviceData.setAdvertisingId(AdvertisingUtil.getGoogleAdId());
         if (DataGatherManager.getInstance().isCheckRoot()) {
             deviceData.setIsroot(RootUtil.checkRootPermission() ? 1 : 0);
