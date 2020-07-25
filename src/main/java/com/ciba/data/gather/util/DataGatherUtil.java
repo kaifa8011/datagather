@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.ciba.data.gather.common.DataGatherManager;
 import com.ciba.data.gather.constant.Constant;
@@ -15,6 +16,7 @@ import com.ciba.data.gather.listener.DeviceDataGatherListener;
 import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.AdvertisingUtil;
+import com.ciba.data.gather.util.device.AirPressureUtils;
 import com.ciba.data.gather.util.device.BaseStationUtil;
 import com.ciba.data.gather.util.device.BatteryUtil;
 import com.ciba.data.gather.util.device.BlueToothUtil;
@@ -40,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ciba
@@ -101,6 +104,8 @@ public class DataGatherUtil {
 
                 gatherOtherData(deviceData);
 
+                gatherAirPressure(deviceData);
+
                 deviceData.setUqid(UniqueIdManager.getInstance(DataGatherManager.getInstance().getContext()).getUniqueId());
 
                 deviceData.setOaid(OAIDManager.getInstance().getOAID());
@@ -120,6 +125,34 @@ public class DataGatherUtil {
                         , processDatas);
             }
         });
+    }
+
+    /**
+     * 收集气压,异步转同步
+     *
+     * @param device
+     */
+    private static void gatherAirPressure(final DeviceData device) {
+        try {
+            AsyncThreadPoolManager.getInstance()
+                    .getThreadPool()
+                    .submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            final boolean[] isGet = {false};
+                            AirPressureUtils.getAirPressure(new AirPressureUtils.OnGetAirPressCallback() {
+                                @Override
+                                public void onGetAirPress(float pressure) {
+                                    device.setHpa(pressure);
+                                    isGet[0] = true;
+                                }
+                            });
+                            while (!isGet[0]) {
+                            }
+                        }
+                    }).get(3, TimeUnit.SECONDS);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -149,6 +182,7 @@ public class DataGatherUtil {
         deviceData.setCoordinateType(customLocation.getCoordinateType());
         deviceData.setLocaAccuracy(customLocation.getAccuracy());
         deviceData.setCoordTime(customLocation.getTime());
+        deviceData.setAltitude(customLocation.getAltitude());
 
         if (customBaseStation != null) {
             deviceData.setBscid(customBaseStation.getBscid());
@@ -229,6 +263,33 @@ public class DataGatherUtil {
             } catch (Exception e) {
                 DataGatherLog.innerI(e.getMessage());
             }
+        }
+
+        gatherPeripheralWifiData(deviceData);
+    }
+
+    /**
+     * 周边wifi设备
+     *
+     * @param deviceData
+     */
+    private static void gatherPeripheralWifiData(DeviceData deviceData) {
+        List<CustomWifiInfo> lists = WifiUtil.getPeripheralWifiData();
+        if (lists == null) {
+            return;
+        }
+        try {
+            JSONArray root = new JSONArray();
+            for (CustomWifiInfo info : lists) {
+                JSONObject object = new JSONObject();
+                object.put("ssid", info.getSsid());
+                object.put("bssid", info.getBssid());
+                object.put("rssi", info.getRssi());
+                root.put(object);
+            }
+            deviceData.setSurroundingWifi(root.toString());
+        } catch (Exception e) {
+            DataGatherLog.innerI(e.getMessage());
         }
     }
 

@@ -3,6 +3,7 @@ package com.ciba.data.gather.util.device;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Looper;
@@ -180,6 +181,40 @@ public class WifiUtil {
             }
         }
         return wifiOtherDeviceDataList;
+    }
+
+
+    /**
+     * 获取周边路由设备信息(需要位置权限)
+     */
+    public static List<CustomWifiInfo> getPeripheralWifiData() {
+        List<CustomWifiInfo> infos = new ArrayList<>();
+        try {
+            int permission = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(),
+                    Manifest.permission.ACCESS_WIFI_STATE);
+            if (!canGetWifiInfo || permission != PackageManager.PERMISSION_GRANTED) {
+                return infos;
+            }
+            WifiManager wifiManager = (WifiManager) DataGatherManager.getInstance().getContext()
+                    .getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager == null) {
+                return null;
+            }
+            ArrayList<ScanResult> list = (ArrayList<ScanResult>) wifiManager.getScanResults();
+            if (list == null) {
+                return null;
+            }
+            CustomWifiInfo info;
+            for (ScanResult result : list) {
+                info = new CustomWifiInfo();
+                info.setSsid(result.SSID);
+                info.setBssid(result.BSSID);
+                info.setRssi(result.level);
+                infos.add(info);
+            }
+        } catch (Exception e) {
+        }
+        return infos;
     }
 
 }

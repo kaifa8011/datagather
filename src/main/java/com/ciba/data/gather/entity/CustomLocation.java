@@ -12,6 +12,7 @@ public class CustomLocation {
     private long time;
     private float accuracy;
     private int coordinateType = 1;
+    private double altitude;
 
     public CustomLocation(double lat, double lng, String country, long time, float accuracy) {
         this.lat = lat;
@@ -19,6 +20,14 @@ public class CustomLocation {
         this.country = country;
         this.time = time;
         this.accuracy = accuracy;
+    }
+
+    public double getAltitude() {
+        return altitude;
+    }
+
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
     }
 
     public int getCoordinateType() {

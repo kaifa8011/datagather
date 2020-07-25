@@ -113,7 +113,7 @@ public class DataGatherManager {
         long machineId = DataCacheManager.getInstance().getMachineId();
         if (machineId == 0) {
             DataArrangeUtil.dataGather(true, true, false, false, listener, true);
-        } else {
+        } else if (listener != null) {
             listener.onUploadSuccess(machineId);
         }
     }

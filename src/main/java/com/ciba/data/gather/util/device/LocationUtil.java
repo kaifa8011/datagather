@@ -118,6 +118,7 @@ public class LocationUtil {
                 customLocation.setLng(location.getLongitude());
             }
             customLocation.setTime(location.getTime());
+            customLocation.setAltitude(location.getAltitude());
             customLocation.setAccuracy(location.getAccuracy());
         }
     }
