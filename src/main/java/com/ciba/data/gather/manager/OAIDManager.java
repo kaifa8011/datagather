@@ -1,7 +1,9 @@
 package com.ciba.data.gather.manager;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ciba.data.gather.constant.Constant;
 import com.ciba.data.gather.manager.oaid.OAIDDelegate;
@@ -34,7 +36,8 @@ public class OAIDManager {
 
     public void init(Context context) {
         try {
-            if (ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
+            if (Build.VERSION.SDK_INT >= Constant.TARGET_VERSION &&
+                    ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
                 OAIDDelegate oaidDelegate = new OAIDDelegate(context);
                 oaidDelegate.setOnGetIdCallback(new OAIDDelegate.OnGetIdCallback() {
                     @Override

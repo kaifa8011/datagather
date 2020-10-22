@@ -6,9 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bun.miitmdid.core.ErrorCode;
-import com.bun.miitmdid.core.JLibrary;
 import com.bun.miitmdid.core.MdidSdkHelper;
-import com.bun.supplier.IdSupplier;
+import com.bun.miitmdid.interfaces.IdSupplier;
 import com.ciba.callback.IIdentifierListenerImp;
 import com.ciba.data.gather.util.ExceptionUtils;
 import com.ciba.data.synchronize.util.StateUtil;
@@ -26,11 +25,6 @@ public class OAIDDelegate {
 
     public OAIDDelegate(@NonNull Context context) {
         this.mContext = context.getApplicationContext();
-        try {
-            JLibrary.InitEntry(context);
-        } catch (Throwable e) {
-            ExceptionUtils.printStackTrace(e);
-        }
     }
 
     public void setOnGetIdCallback(OnGetIdCallback callback) {

@@ -1,8 +1,8 @@
 package com.ciba.callback;
 
 
-import com.bun.supplier.IIdentifierListener;
-import com.bun.supplier.IdSupplier;
+import com.bun.miitmdid.interfaces.IIdentifierListener;
+import com.bun.miitmdid.interfaces.IdSupplier;
 
 /**
  * 防止回调接口被混淆

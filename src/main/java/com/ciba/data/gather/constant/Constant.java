@@ -1,5 +1,7 @@
 package com.ciba.data.gather.constant;
 
+import android.os.Build;
+
 /**
  * @author ciba
  * @description 描述
@@ -21,5 +23,7 @@ public class Constant {
     /**
      * Oaid库的初始化类路径
      */
-    public static final String OAID_LIBARY_CORE_PATH = "com.bun.miitmdid.core.JLibrary";
+    public static final String OAID_LIBARY_CORE_PATH = "com.bun.miitmdid.core.MdidSdkHelper";
+
+    public static final int TARGET_VERSION = Build.VERSION_CODES.O;
 }
