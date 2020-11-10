@@ -90,6 +90,8 @@ public class DataGatherUtil {
 
                 DeviceData deviceData = new DeviceData();
 
+                gatherAirPressure(deviceData);
+
                 gatherDisplayData(deviceData);
 
                 gatherNetworkData(deviceData);
@@ -103,8 +105,6 @@ public class DataGatherUtil {
                 gatherBluetoothData(deviceData);
 
                 gatherOtherData(deviceData);
-
-                gatherAirPressure(deviceData);
 
                 deviceData.setUqid(UniqueIdManager.getInstance(DataGatherManager.getInstance().getContext()).getUniqueId());
 
@@ -139,16 +139,12 @@ public class DataGatherUtil {
                     .submit(new Runnable() {
                         @Override
                         public void run() {
-                            final boolean[] isGet = {false};
                             AirPressureUtils.getAirPressure(new AirPressureUtils.OnGetAirPressCallback() {
                                 @Override
                                 public void onGetAirPress(float pressure) {
                                     device.setHpa(pressure);
-                                    isGet[0] = true;
                                 }
                             });
-                            while (!isGet[0]) {
-                            }
                         }
                     }).get(3, TimeUnit.SECONDS);
         } catch (Exception e) {
