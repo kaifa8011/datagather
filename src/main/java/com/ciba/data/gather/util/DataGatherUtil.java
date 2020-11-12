@@ -142,7 +142,9 @@ public class DataGatherUtil {
                             AirPressureUtils.getAirPressure(new AirPressureUtils.OnGetAirPressCallback() {
                                 @Override
                                 public void onGetAirPress(float pressure) {
-                                    device.setHpa(pressure);
+                                    if (device != null) {
+                                        device.setHpa(pressure);
+                                    }
                                 }
                             });
                         }
