@@ -58,7 +58,10 @@ public class PhoneStateUtil {
 
             int per = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.READ_PHONE_STATE);
             if (canGetPhoneStateInfo && per == PackageManager.PERMISSION_GRANTED) {
-                TelephonyManager tm = (TelephonyManager) DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                TelephonyManager tm = null;
+                if (DeviceUnableReadUtil.isUseImei()) {
+                    tm = (TelephonyManager) DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                }
                 String imsi = null;
                 String iccid = null;
                 String imei = null;

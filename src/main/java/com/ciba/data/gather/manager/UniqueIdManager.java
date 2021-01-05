@@ -53,7 +53,7 @@ public class UniqueIdManager {
     private void generateUniqueIdChain() {
         mUniqueIdGenerators = new ArrayList<>();
 //        mUniqueIdGenerators.add(new VideoUniqueIdGenerator(mContext));
-        mUniqueIdGenerators.add(new ImageUniqueGenerator(mContext));
+//        mUniqueIdGenerators.add(new ImageUniqueGenerator(mContext));
         mUniqueIdGenerators.add(new AudioUniqueIdGenerator(mContext));
         mUniqueIdChain = new UniqueIdChain(mContext, mUniqueIdGenerators, 0);
     }

@@ -9,13 +9,18 @@ import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
+import com.ciba.data.gather.util.device.PackageUtil;
 import com.ciba.data.gather.util.device.PhoneStateUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.gather.util.device.WifiUtil;
 import com.ciba.data.synchronize.OnDeviceDataUpLoadListener;
 import com.ciba.data.synchronize.common.DataSynchronizeManager;
+import com.ciba.data.synchronize.entity.CustomPackageInfo;
 import com.ciba.data.synchronize.manager.DataCacheManager;
+import com.ciba.data.synchronize.manager.LoaderUploaderManager;
 import com.ciba.datagather.BuildConfig;
+
+import java.util.List;
 
 /**
  * @author ciba
@@ -27,6 +32,7 @@ public class DataGatherManager {
     private static DataGatherManager instance;
     private boolean checkRoot;
     private Context context;
+    private boolean isUploadInstallPackage;
 
     private DataGatherManager() {
     }
@@ -130,6 +136,19 @@ public class DataGatherManager {
      */
     public boolean isCheckRoot() {
         return checkRoot;
+    }
+
+    /**
+     * 获取并上传手机安装列表信息
+     */
+    public void upLoadInstallPackage() {
+        long machineId = DataCacheManager.getInstance().getMachineId();
+        if (machineId == 0 || isUploadInstallPackage) {
+            return;
+        }
+        isUploadInstallPackage = true;
+        List<CustomPackageInfo> installPackageList = PackageUtil.getInstallPackageList(true);
+        LoaderUploaderManager.getInstance().uploadInstallData(installPackageList);
     }
 
     public String getSdkVersion() {

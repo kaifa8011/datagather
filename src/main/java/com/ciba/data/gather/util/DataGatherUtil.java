@@ -114,7 +114,6 @@ public class DataGatherUtil {
                 List<CustomPackageInfo> customPackageInfos = null;
                 List<ProcessData> processDatas = null;
                 if (!isOnlyGetMachineId) {
-                    customPackageInfos = PackageUtil.getInstallPackageList(withoutSystemApp);
                     processDatas = ProcessUtil.getAppProcessList(withoutSystemApp, appOnly);
                 }
 

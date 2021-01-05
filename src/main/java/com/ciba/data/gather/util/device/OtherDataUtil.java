@@ -7,7 +7,6 @@ import com.ciba.data.gather.util.DataGatherLog;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.UUID;
 
 /**
@@ -93,7 +92,9 @@ public class OtherDataUtil {
                     Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
 
                     Build.USER.length() % 10; //13 位
-            serial = android.os.Build.class.getField("SERIAL").get(null).toString();
+            if (DeviceUnableReadUtil.isUseSerial()) {
+                serial = android.os.Build.class.getField("SERIAL").get(null).toString();
+            }
             //API>=9 使用serial号
             return new UUID(deviceId.hashCode(), serial.hashCode()).toString();
         } catch (Exception e) {
