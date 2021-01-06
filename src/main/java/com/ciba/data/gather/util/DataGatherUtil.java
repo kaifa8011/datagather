@@ -110,6 +110,8 @@ public class DataGatherUtil {
 
                 deviceData.setOaid(OAIDManager.getInstance().getOAID());
 
+                deviceData.setVaid(OAIDManager.getInstance().getVAID());
+
                 //若只是去获取machineId则不收集应用安装列表以及启动列表信息
                 List<CustomPackageInfo> customPackageInfos = null;
                 List<ProcessData> processDatas = null;

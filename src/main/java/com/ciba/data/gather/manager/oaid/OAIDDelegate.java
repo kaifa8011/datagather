@@ -46,8 +46,9 @@ public class OAIDDelegate {
                 // 防止异步调用出现异常
                 try {
                     String oaid = idSupplier.getOAID();
+                    String vaid = idSupplier.getVAID();
                     if (mListener != null) {
-                        mListener.onIdGetSuccess(oaid);
+                        mListener.onIdGetSuccess(oaid, vaid);
                     }
                 } catch (Throwable e) {
                 }
@@ -83,7 +84,7 @@ public class OAIDDelegate {
     }
 
     public interface OnGetIdCallback {
-        void onIdGetSuccess(@NonNull String ids);
+        void onIdGetSuccess(@NonNull String oaid, @NonNull String vaid);
     }
 
 }

@@ -19,6 +19,7 @@ import com.ciba.data.synchronize.util.SPUtil;
 public class OAIDManager {
     private static volatile OAIDManager instance;
     private String mOAID;
+    private String mVAID;
 
     public static OAIDManager getInstance() {
         if (instance == null) {
@@ -41,8 +42,9 @@ public class OAIDManager {
                 OAIDDelegate oaidDelegate = new OAIDDelegate(context);
                 oaidDelegate.setOnGetIdCallback(new OAIDDelegate.OnGetIdCallback() {
                     @Override
-                    public void onIdGetSuccess(@NonNull String ids) {
-                        SPUtil.putString(Constant.KEY_CIBA_OAID, ids);
+                    public void onIdGetSuccess(@NonNull String oaid, @NonNull String vaid) {
+                        SPUtil.putString(Constant.KEY_CIBA_OAID, oaid);
+                        SPUtil.putString(Constant.KEY_CIBA_VAID, vaid);
                     }
                 });
                 oaidDelegate.startGetOAID();
@@ -56,6 +58,13 @@ public class OAIDManager {
             mOAID = SPUtil.getString(Constant.KEY_CIBA_OAID);
         }
         return mOAID;
+    }
+
+    public String getVAID() {
+        if (mVAID == null) {
+            mVAID = SPUtil.getString(Constant.KEY_CIBA_VAID);
+        }
+        return mVAID;
     }
 
 }

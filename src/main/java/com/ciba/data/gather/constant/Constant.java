@@ -14,6 +14,7 @@ public class Constant {
 
     public static final String NETWORK_DEFAULT_TYPE = "";
     public static final String KEY_CIBA_OAID = "KEY_CIBA_OAID";
+    public static final String KEY_CIBA_VAID = "KEY_CIBA_VAID";
 
     /**
      * 该键不能被修改
