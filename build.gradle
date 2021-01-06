@@ -86,6 +86,6 @@ dependencies {
     api 'com.ciba:http:0.0.13'
 //    releaseApi 'com.ciba:datasynchronize:0.4.3'
     api project(':datasynchronize')
-    compileOnly(name: 'oaid_sdk_1.0.23', ext: 'aar')
+    compileOnly(name: 'oaid_sdk_1.0.25', ext: 'aar')
 
 }
