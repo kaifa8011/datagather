@@ -58,33 +58,35 @@ public class PhoneStateUtil {
 
             int per = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.READ_PHONE_STATE);
             if (canGetPhoneStateInfo && per == PackageManager.PERMISSION_GRANTED) {
-                TelephonyManager tm = null;
-                if (DeviceUnableReadUtil.isUseImei()) {
-                    tm = (TelephonyManager) DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
-                }
+
                 String imsi = null;
                 String iccid = null;
                 String imei = null;
                 boolean networkRoaming = false;
-                if (tm != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        try {
-                            imei = tm.getImei();
-                        } catch (Exception e) {
-                            DataGatherLog.innerI(e.getMessage());
+                if (DeviceUnableReadUtil.isUseImei()) {
+                    TelephonyManager tm ;
+                    tm = (TelephonyManager) DataGatherManager.getInstance().getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    if (tm != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            try {
+                                imei = tm.getImei();
+                            } catch (Exception e) {
+                                DataGatherLog.innerI(e.getMessage());
+                            }
                         }
-                    }
-                    imsi = tm.getSubscriberId();
-                    iccid = tm.getSimSerialNumber();
-                    if (TextUtils.isEmpty(imei)) {
-                        try {
-                            imei = tm.getDeviceId();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        imsi = tm.getSubscriberId();
+                        iccid = tm.getSimSerialNumber();
+                        if (TextUtils.isEmpty(imei)) {
+                            try {
+                                imei = tm.getDeviceId();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
+                        networkRoaming = tm.isNetworkRoaming();
                     }
-                    networkRoaming = tm.isNetworkRoaming();
                 }
+
                 if (needDefaultValue) {
                     customPhoneState.setImei(TextUtils.isEmpty(imei) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imei);
                     customPhoneState.setIccid(TextUtils.isEmpty(iccid) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : iccid);
