@@ -15,35 +15,34 @@ import java.io.File;
 public class RomUtil {
 
     /**
-     * ROM大小,单位G
+     * ROM大小,单位byte
      */
-    public static String getRomSpaceTotalSize(Context context) {
+    public static long getRomSpaceTotalSize() {
         try {
             File path = Environment.getDataDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long totalBlocks = stat.getBlockCount();
-            String totalSize = Formatter.formatFileSize(context, totalBlocks * blockSize);
-            return totalSize;
+            return totalBlocks * blockSize;
         } catch (Exception e) {
         }
-        return "";
+        return 0;
     }
 
+
     /**
-     * ROM可用大小,单位G
+     * ROM可用大小,单位byte
      */
-    public static String getRomSpaceAvailSize(Context context) {
+    public static long getRomSpaceAvailSize() {
         try {
             File path = Environment.getDataDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long availableBlocks = stat.getAvailableBlocks();
-            String availableSize = Formatter.formatFileSize(context, availableBlocks * blockSize);
-            return availableSize;
+            return availableBlocks * blockSize;
         } catch (Exception e) {
         }
-        return "0";
+        return 0;
     }
 
 }

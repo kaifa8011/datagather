@@ -28,7 +28,9 @@ import com.ciba.data.gather.util.device.OtherDataUtil;
 import com.ciba.data.gather.util.device.PackageUtil;
 import com.ciba.data.gather.util.device.PhoneStateUtil;
 import com.ciba.data.gather.util.device.ProcessUtil;
+import com.ciba.data.gather.util.device.RomUtil;
 import com.ciba.data.gather.util.device.RootUtil;
+import com.ciba.data.gather.util.device.SystemClockUtil;
 import com.ciba.data.gather.util.device.WifiUtil;
 import com.ciba.data.synchronize.entity.CustomBluetoothInfo;
 import com.ciba.data.synchronize.entity.CustomPackageInfo;
@@ -111,6 +113,16 @@ public class DataGatherUtil {
                 deviceData.setOaid(OAIDManager.getInstance().getOAID());
 
                 deviceData.setVaid(OAIDManager.getInstance().getVAID());
+
+                deviceData.setCapacity(RomUtil.getRomSpaceTotalSize());
+
+                deviceData.setRemainCapacity(RomUtil.getRomSpaceAvailSize());
+
+                deviceData.setBrightness(DisplayUtil.getScreenBrightness());
+
+                deviceData.setUptime(SystemClockUtil.getUpTime());
+
+                deviceData.setRuntime(SystemClockUtil.getElapsedRealtime());
 
                 //若只是去获取machineId则不收集应用安装列表以及启动列表信息
                 List<CustomPackageInfo> customPackageInfos = null;

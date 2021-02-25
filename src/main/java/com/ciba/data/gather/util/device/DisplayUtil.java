@@ -93,13 +93,12 @@ public class DisplayUtil {
 
     /**
      * 获取手机屏幕亮度，正常情况下是1-255，个别品牌手机阈值不能确定
-     * @param context
      * @return
      */
-    public static int getScreenBrightness(Context context) {
-        int value = 0;
-        ContentResolver cr = context.getContentResolver();
+    public static int getScreenBrightness() {
+        int value = 1;
         try {
+            ContentResolver cr = DataGatherManager.getInstance().getContext().getContentResolver();
             value = Settings.System.getInt(cr, Settings.System.SCREEN_BRIGHTNESS);
         } catch (Exception e) {
 

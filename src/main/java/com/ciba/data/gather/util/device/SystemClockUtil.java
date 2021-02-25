@@ -16,4 +16,13 @@ public class SystemClockUtil {
     public static long getElapsedRealtime() {
         return SystemClock.elapsedRealtime();
     }
+
+    /**
+     * 返回开机时刻的时间戳,单位:ms
+     * @return
+     */
+    public static long getUpTime() {
+        return System.currentTimeMillis() - SystemClock.elapsedRealtime();
+    }
+
 }
