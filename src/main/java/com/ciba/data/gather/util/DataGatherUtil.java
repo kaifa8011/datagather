@@ -61,7 +61,7 @@ public class DataGatherUtil {
      * @param geocoder                 ：是否需要地理编码
      * @param deviceDataGatherListener ：设备信息收集监听
      */
-    public static void gatherDeviceData(final boolean withoutSystemApp
+        public static void gatherDeviceData(final boolean withoutSystemApp
             , final boolean appOnly
             , final boolean geocoder
             , boolean getSignalStrengths
@@ -124,17 +124,15 @@ public class DataGatherUtil {
 
                 deviceData.setRuntime(SystemClockUtil.getElapsedRealtime());
 
-                //若只是去获取machineId则不收集应用安装列表以及启动列表信息
-                List<CustomPackageInfo> customPackageInfos = null;
                 List<ProcessData> processDatas = null;
+                //若只是去获取machineId则不收集当前运行中应用进程
                 if (!isOnlyGetMachineId) {
                     processDatas = ProcessUtil.getAppProcessList(withoutSystemApp, appOnly);
                 }
 
-                // getInstallPackageList()获取应用名称安装列表多时比较耗时
                 deviceDataGatherListener.onDeviceDataGather(null
                         , deviceData
-                        , customPackageInfos
+                        , null
                         , processDatas);
             }
         });
@@ -227,7 +225,7 @@ public class DataGatherUtil {
     }
 
     /**
-     * 收集收集设备信息数据
+     * 收集设备信息数据
      */
     private static void gatherPhoneStateData(DeviceData deviceData) {
         CustomPhoneState phoneState = PhoneStateUtil.getPhoneState();

@@ -119,6 +119,17 @@ public class PackageUtil {
      */
     public static List<CustomPackageInfo> getInstallPackageList(boolean withOutSystem) {
         List<CustomPackageInfo> customPackageInfoList = new ArrayList<>();
+
+        //如果是小米系统并且MIUI版本大于10，则不读取列表
+        boolean isMIUI = XiaoMiDeviceUtil.checkMIUI();
+        if (isMIUI) {
+            boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
+            if (!miuiVersionNameLtV10) {
+                //miui大于10 不读取列表
+                return customPackageInfoList;
+            }
+        }
+
         try {
             PackageManager packageManager = getPackageManager();
             List<String> packageList = runCommandPackageList();

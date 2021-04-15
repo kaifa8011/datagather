@@ -95,6 +95,9 @@ public class OtherDataUtil {
             if (DeviceUnableReadUtil.isUseSerial()) {
                 serial = android.os.Build.class.getField("SERIAL").get(null).toString();
             }
+            if (serial == null) {
+                serial = "serial";
+            }
             //API>=9 使用serial号
             return new UUID(deviceId.hashCode(), serial.hashCode()).toString();
         } catch (Exception e) {
