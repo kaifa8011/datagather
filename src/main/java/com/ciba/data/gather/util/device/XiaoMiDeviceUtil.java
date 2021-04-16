@@ -35,7 +35,7 @@ public class XiaoMiDeviceUtil {
 
 
     /**
-     * 判断是否为小米版本小于v10
+     * 判断是否为小米版本小于v11
      *
      * @return
      */
@@ -47,7 +47,7 @@ public class XiaoMiDeviceUtil {
                 versionName = versionName.substring(1);
                 if (!TextUtils.isEmpty(versionName)) {
                     Integer version = Integer.valueOf(versionName);
-                    return version < 10;
+                    return version < 11;
                 }
             }
             return false;

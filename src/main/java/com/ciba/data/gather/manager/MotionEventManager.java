@@ -79,7 +79,8 @@ public class MotionEventManager {
     }
 
     public void onDestroy() {
-        checkUpload(0);
+        //移除数据采集 2021.04.15  by松子
+//        checkUpload(0);
     }
 
     /**
@@ -88,8 +89,9 @@ public class MotionEventManager {
      * @param data
      */
     private void addDataAndCheckUpload(OperationData data) {
-        motionEventDataList.add(data);
-        checkUpload(20);
+        //移除数据采集 2021.04.15  by松子
+//        motionEventDataList.add(data);
+//        checkUpload(20);
     }
 
     /**
