@@ -44,6 +44,10 @@ public class WifiUtil {
         WifiUtil.canGetWifiInfo = canGetWifiInfo;
     }
 
+    public static boolean isCanGetWifiInfo() {
+        return canGetWifiInfo;
+    }
+
     /**
      * 獲取WIFi信息
      *

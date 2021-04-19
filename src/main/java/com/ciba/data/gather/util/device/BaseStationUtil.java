@@ -82,29 +82,6 @@ public class BaseStationUtil {
             }
 
             if (canGetStationData) {
-//                List<NeighboringCellInfo> neighboringCellInfoList = telephonyManager.getNeighboringCellInfo();
-//                if (neighboringCellInfoList != null && neighboringCellInfoList.size() > 0) {
-//                    try {
-//                        JSONArray jsonArray = new JSONArray();
-//                        for (int i = 0; i < neighboringCellInfoList.size(); i++) {
-//                            NeighboringCellInfo neighboringCellInfo = neighboringCellInfoList.get(i);
-//                            if (neighboringCellInfo == null) {
-//                                continue;
-//                            }
-//                            JSONObject jsonObject = new JSONObject();
-//                            jsonObject.put("mCid", neighboringCellInfo.getCid());
-//                            jsonObject.put("mLac", neighboringCellInfo.getLac());
-//                            jsonObject.put("mNetworkType", neighboringCellInfo.getNetworkType());
-//                            jsonObject.put("mPsc", neighboringCellInfo.getPsc());
-//                            jsonObject.put("mRssi", neighboringCellInfo.getRssi());
-//                            jsonArray.put(jsonObject);
-//                        }
-//                        String neighboringCellInfoJson = jsonArray.toString();
-//                        customBaseStation.setStbif(neighboringCellInfoJson);
-//                    } catch (Exception e) {
-//                        DataGatherLog.innerI(e.getMessage());
-//                    }
-//                }
                 CellLocation cellLocation = telephonyManager.getCellLocation();
                 if (cellLocation instanceof CdmaCellLocation) {
                     // 电信获取基站id

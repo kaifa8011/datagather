@@ -121,6 +121,11 @@ public class NetworkUtil {
     }
 
     public static String getMacAddress() {
+        // 隐私协议拒绝的情况下，不读取信息
+        if (!WifiUtil.isCanGetWifiInfo()) {
+            return "";
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return getMacAddressAboveVersionM();
         }

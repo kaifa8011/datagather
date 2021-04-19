@@ -37,6 +37,10 @@ public class PhoneStateUtil {
         PhoneStateUtil.canGetPhoneStateInfo = canGetPhoneStateInfo;
     }
 
+    public static boolean isCanGetPhoneStateInfo() {
+        return canGetPhoneStateInfo;
+    }
+
     public static CustomPhoneState getPhoneState() {
         return getPhoneState(true);
     }
@@ -44,6 +48,12 @@ public class PhoneStateUtil {
     @SuppressLint("HardwareIds")
     public static CustomPhoneState getPhoneState(boolean needDefaultValue) {
         CustomPhoneState customPhoneState = new CustomPhoneState();
+
+        // 隐私协议拒绝的情况下，不读取信息
+        if (!canGetPhoneStateInfo) {
+            return customPhoneState;
+        }
+
         try {
             String androidId = Settings.Secure.getString(DataGatherManager.getInstance().getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
             if (TextUtils.isEmpty(androidId)) {
@@ -57,7 +67,7 @@ public class PhoneStateUtil {
             customPhoneState.setDeviceType(isPad() ? 5 : 4);
 
             int per = ContextCompat.checkSelfPermission(DataGatherManager.getInstance().getContext(), Manifest.permission.READ_PHONE_STATE);
-            if (canGetPhoneStateInfo && per == PackageManager.PERMISSION_GRANTED) {
+            if (per == PackageManager.PERMISSION_GRANTED) {
 
                 String imsi = null;
                 String iccid = null;
