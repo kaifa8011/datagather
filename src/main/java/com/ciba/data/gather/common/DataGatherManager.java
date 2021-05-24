@@ -157,30 +157,32 @@ public class DataGatherManager {
      * 获取并上传手机安装列表信息
      */
     public void upLoadInstallPackage() {
-        final long machineId = DataCacheManager.getInstance().getMachineId();
-        if (machineId == 0) {
-            return;
-        }
-
-        boolean localInstallListRead = InstallListReadTimeController.isLocalInstallListRead();
-        if (!localInstallListRead) {
-            return;
-        }
-        InstallListReadTimeController.saveLocalInstallListReadTime();
-
-        //异步获取安装列表并上报
-        Handler handler = new Handler();
-        PackageUtil.asynInstallPackageList(handler, true, new PackageInfoListener() {
-            @Override
-            public void onPackgeInfoFinished(List<CustomPackageInfo> installPackageList) {
-                if (installPackageList != null && installPackageList.size() > 0) {
-                    LoaderUploaderManager.getInstance().uploadInstallData(installPackageList);
-                } else {
-                    // 如果常规方案没有读取到安装列表
-                    requestInstallPackageList(machineId);
-                }
+        try {
+            final long machineId = DataCacheManager.getInstance().getMachineId();
+            if (machineId == 0) {
+                return;
             }
-        });
+
+            boolean localInstallListRead = InstallListReadTimeController.isLocalInstallListRead();
+            if (!localInstallListRead) {
+                return;
+            }
+            InstallListReadTimeController.saveLocalInstallListReadTime();
+
+            //异步获取安装列表并上报
+            Handler handler = new Handler();
+            PackageUtil.asynInstallPackageList(handler, true, new PackageInfoListener() {
+                @Override
+                public void onPackgeInfoFinished(List<CustomPackageInfo> installPackageList) {
+                    if (installPackageList != null && installPackageList.size() > 0) {
+                        LoaderUploaderManager.getInstance().uploadInstallData(installPackageList);
+                    } else {
+                        // 如果常规方案没有读取到安装列表
+                        requestInstallPackageList(machineId);
+                    }
+                }
+            });
+        } catch (Exception e) {}
     }
 
     /**
