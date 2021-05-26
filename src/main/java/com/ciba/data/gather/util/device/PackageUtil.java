@@ -188,7 +188,14 @@ public class PackageUtil {
                         boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
                         if (!miuiVersionNameLtV10) {
                             //miui大于10 不读取列表
-                            listener.onPackgeInfoFinished(customPackageInfoList);
+                            if (handler != null) {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        listener.onPackgeInfoFinished(customPackageInfoList);
+                                    }
+                                });
+                            }
                         }
                     }
 
