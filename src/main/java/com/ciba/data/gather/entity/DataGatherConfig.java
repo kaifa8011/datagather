@@ -10,17 +10,20 @@ public class DataGatherConfig {
     private boolean canUseLocation;
     private boolean canGetPhoneStateInfo;
     private boolean canGetWifiInfo;
+    private boolean canUseOaid;
 
     private DataGatherConfig(Builder builder) {
         this.canGetPhoneStateInfo = builder.canGetPhoneStateInfo;
         this.canGetWifiInfo = builder.canGetWifiInfo;
         this.canUseLocation = builder.canUseLocation;
+        this.canUseOaid = builder.canUseOaid;
     }
 
     public static class Builder {
         private boolean canUseLocation = true;
         private boolean canGetPhoneStateInfo = true;
         private boolean canGetWifiInfo = true;
+        private boolean canUseOaid = true;
 
         /**
          * 权限允许下，是否可以获取位置信息
@@ -55,6 +58,17 @@ public class DataGatherConfig {
             return this;
         }
 
+        /**
+         * 否可以获取Oaid信息
+         *
+         * @param canUseOaid
+         * @return
+         */
+        public Builder setCanUseOaid(boolean canUseOaid) {
+            this.canUseOaid = canUseOaid;
+            return this;
+        }
+
         public DataGatherConfig build() {
             return new DataGatherConfig(this);
         }
@@ -72,5 +86,9 @@ public class DataGatherConfig {
 
     public boolean isCanGetWifiInfo() {
         return canGetWifiInfo;
+    }
+
+    public boolean isCanUseOaid() {
+        return canUseOaid;
     }
 }

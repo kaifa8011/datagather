@@ -61,6 +61,7 @@ public class DataGatherManager {
         WifiUtil.setCanGetWifiInfo(config.isCanGetWifiInfo());
         LocationUtil.setCanUseLocation(config.isCanUseLocation());
         PhoneStateUtil.setCanGetPhoneStateInfo(config.isCanGetPhoneStateInfo());
+        OAIDManager.setCanUseOaid(config.isCanUseOaid());
     }
 
     public void init(Context context) {
