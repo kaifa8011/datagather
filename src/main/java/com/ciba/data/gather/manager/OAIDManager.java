@@ -8,6 +8,7 @@ import android.util.Log;
 import com.ciba.data.gather.constant.Constant;
 import com.ciba.data.gather.manager.oaid.OAIDDelegate;
 import com.ciba.data.gather.util.ClassUtils;
+import com.ciba.data.gather.util.LogUtils;
 import com.ciba.data.synchronize.util.SPUtil;
 
 /**
@@ -17,9 +18,19 @@ import com.ciba.data.synchronize.util.SPUtil;
  * @date 2019-10-24
  */
 public class OAIDManager {
+    private static boolean canUseOaid = true;
     private static volatile OAIDManager instance;
     private String mOAID;
     private String mVAID;
+
+    /**
+     * 是否可以获取Oaid
+     *
+     * @param canUseOaid
+     */
+    public static void setCanUseOaid(boolean canUseOaid) {
+        OAIDManager.canUseOaid = canUseOaid;
+    }
 
     public static OAIDManager getInstance() {
         if (instance == null) {
@@ -36,6 +47,10 @@ public class OAIDManager {
     }
 
     public void init(Context context) {
+        if (!canUseOaid) {
+            LogUtils.d("Oaid同步获取失败 : 不允许SDK使用oaid信息，不进行oaid初始化");
+            return;
+        }
         try {
             if (Build.VERSION.SDK_INT >= Constant.TARGET_VERSION &&
                     ClassUtils.isLibraryCompile(Constant.OAID_LIBARY_CORE_PATH)) {
