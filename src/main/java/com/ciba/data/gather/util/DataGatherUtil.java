@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import com.ciba.data.gather.common.DataGatherManager;
 import com.ciba.data.gather.constant.Constant;
@@ -13,7 +12,6 @@ import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.entity.CustomPhoneState;
 import com.ciba.data.gather.entity.CustomWifiInfo;
 import com.ciba.data.gather.listener.DeviceDataGatherListener;
-import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.AdvertisingUtil;
 import com.ciba.data.gather.util.device.AirPressureUtils;
@@ -25,17 +23,13 @@ import com.ciba.data.gather.util.device.DisplayUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
 import com.ciba.data.gather.util.device.NetworkUtil;
 import com.ciba.data.gather.util.device.OtherDataUtil;
-import com.ciba.data.gather.util.device.PackageUtil;
 import com.ciba.data.gather.util.device.PhoneStateUtil;
-import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.gather.util.device.RomUtil;
 import com.ciba.data.gather.util.device.RootUtil;
 import com.ciba.data.gather.util.device.SystemClockUtil;
 import com.ciba.data.gather.util.device.WifiUtil;
 import com.ciba.data.synchronize.entity.CustomBluetoothInfo;
-import com.ciba.data.synchronize.entity.CustomPackageInfo;
 import com.ciba.data.synchronize.entity.DeviceData;
-import com.ciba.data.synchronize.entity.ProcessData;
 import com.ciba.data.synchronize.entity.WifiOtherDeviceData;
 import com.ciba.data.synchronize.manager.DataCacheManager;
 import com.ciba.http.manager.AsyncThreadPoolManager;
@@ -45,6 +39,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import cn.admobiletop.adsuyi.adapter.oaid.OAIDManager;
 
 /**
  * @author ciba

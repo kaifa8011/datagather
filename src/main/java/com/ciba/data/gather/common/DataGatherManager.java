@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.listener.PackageInfoListener;
-import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.PckLogJsonUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
@@ -33,10 +32,11 @@ import com.ciba.http.listener.SimpleHttpListener;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.admobiletop.adsuyi.adapter.oaid.OAIDManager;
 
 /**
  * @author ciba
@@ -76,7 +76,7 @@ public class DataGatherManager {
         WifiUtil.setCanGetWifiInfo(config.isCanGetWifiInfo());
         LocationUtil.setCanUseLocation(config.isCanUseLocation());
         PhoneStateUtil.setCanGetPhoneStateInfo(config.isCanGetPhoneStateInfo());
-        OAIDManager.setCanUseOaid(config.isCanUseOaid());
+        OAIDManager.getInstance().init(context, config.isCanUseOaid());
     }
 
     public void init(Context context) {
@@ -115,7 +115,6 @@ public class DataGatherManager {
      */
     public void initGather() {
         if (context != null && Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
-            OAIDManager.getInstance().init(context);
             if (context instanceof Application) {
                 ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
             }
