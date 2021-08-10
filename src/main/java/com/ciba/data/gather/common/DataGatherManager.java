@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.listener.PackageInfoListener;
+import com.ciba.data.gather.manager.DatagatherOaidManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.PckLogJsonUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
@@ -76,7 +77,7 @@ public class DataGatherManager {
         WifiUtil.setCanGetWifiInfo(config.isCanGetWifiInfo());
         LocationUtil.setCanUseLocation(config.isCanUseLocation());
         PhoneStateUtil.setCanGetPhoneStateInfo(config.isCanGetPhoneStateInfo());
-        OAIDManager.getInstance().init(context, config.isCanUseOaid());
+        DatagatherOaidManager.getInstance().init(context, config.isCanUseOaid());
     }
 
     public void init(Context context) {

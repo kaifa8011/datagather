@@ -12,6 +12,7 @@ import com.ciba.data.gather.entity.CustomLocation;
 import com.ciba.data.gather.entity.CustomPhoneState;
 import com.ciba.data.gather.entity.CustomWifiInfo;
 import com.ciba.data.gather.listener.DeviceDataGatherListener;
+import com.ciba.data.gather.manager.DatagatherOaidManager;
 import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.AdvertisingUtil;
 import com.ciba.data.gather.util.device.AirPressureUtils;
@@ -106,9 +107,9 @@ public class DataGatherUtil {
 
                 deviceData.setUqid(UniqueIdManager.getInstance(DataGatherManager.getInstance().getContext()).getUniqueId());
 
-                deviceData.setOaid(OAIDManager.getInstance().getOAID());
+                deviceData.setOaid(DatagatherOaidManager.getInstance().getOAID());
 
-                deviceData.setVaid(OAIDManager.getInstance().getVAID());
+                deviceData.setVaid(DatagatherOaidManager.getInstance().getVAID());
 
                 deviceData.setCapacity(RomUtil.getRomSpaceTotalSize());
 
