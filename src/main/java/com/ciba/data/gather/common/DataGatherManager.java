@@ -1,11 +1,13 @@
 package com.ciba.data.gather.common;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.listener.PackageInfoListener;
 import com.ciba.data.gather.manager.OAIDManager;
@@ -31,6 +33,7 @@ import com.ciba.http.listener.SimpleHttpListener;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +76,7 @@ public class DataGatherManager {
         WifiUtil.setCanGetWifiInfo(config.isCanGetWifiInfo());
         LocationUtil.setCanUseLocation(config.isCanUseLocation());
         PhoneStateUtil.setCanGetPhoneStateInfo(config.isCanGetPhoneStateInfo());
-        OAIDManager.setCanUseOaid(config.isCanUseOaid());
+        DatagatherOaidManager.getInstance().init(context, config.isCanUseOaid());
     }
 
     public void init(Context context) {
@@ -112,7 +115,6 @@ public class DataGatherManager {
      */
     public void initGather() {
         if (context != null && Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
-            OAIDManager.getInstance().init(context);
             DataArrangeUtil.dataGather(true, true, false, true, null, false);
         }
     }
