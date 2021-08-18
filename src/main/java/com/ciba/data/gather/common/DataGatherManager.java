@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.listener.PackageInfoListener;
-import com.ciba.data.gather.manager.OAIDManager;
+import com.ciba.data.gather.manager.DatagatherOaidManager;
 import com.ciba.data.gather.util.DataArrangeUtil;
 import com.ciba.data.gather.util.PckLogJsonUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
@@ -194,7 +194,6 @@ public class DataGatherManager {
 
         Map<String, String> requestParams = new HashMap<>(1);
         //用dcid 替换 machineId
-        //requestParams.put("machineId", machineId + "");
         requestParams.put("dcid", machineId + "");
         String installPackageUrl = SampleUrlManager.getInstallPackageUrl();
         AsyncHttpClient httpClient = SampleLoaderUploaderManager.getInstance().getHttpClient();

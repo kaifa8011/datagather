@@ -1,9 +1,6 @@
 package com.ciba.data.gather.util;
 
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 
 import com.ciba.data.gather.common.DataGatherManager;
 import com.ciba.data.gather.constant.Constant;
@@ -44,8 +41,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
-
-import cn.admobiletop.adsuyi.adapter.oaid.OAIDManager;
 
 /**
  * @author ciba
@@ -141,8 +136,6 @@ public class DataGatherUtil {
 
                 //安卓签名指纹
                 deviceData.setSign(SignCheckUtil.getCertificateSHA1Fingerprint(DataSynchronizeManager.getInstance().getContext()));
-
-                Log.e("wsong", deviceData.toString());
 
                 //初始化中 应用列表和安装进行均不读取
                 deviceDataGatherListener.onDeviceDataGather(null
