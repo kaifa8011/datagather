@@ -8,9 +8,8 @@ import com.ciba.data.gather.constant.Constant;
  * @date 2018/12/3
  */
 public class CustomBaseStation {
-    private String bscid = Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
     private String bsss = "";
-    private String lac = Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
+    private String lac = "";
     private String stbif = "";
 
     public String getStbif() {
@@ -27,14 +26,6 @@ public class CustomBaseStation {
 
     public void setLac(String lac) {
         this.lac = lac;
-    }
-
-    public String getBscid() {
-        return bscid;
-    }
-
-    public void setBscid(String bscid) {
-        this.bscid = bscid;
     }
 
     public String getBsss() {

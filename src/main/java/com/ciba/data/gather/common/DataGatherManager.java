@@ -1,13 +1,11 @@
 package com.ciba.data.gather.common;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.ciba.data.gather.callback.CustomActivityLifecycleCallbacks;
 import com.ciba.data.gather.entity.DataGatherConfig;
 import com.ciba.data.gather.listener.PackageInfoListener;
 import com.ciba.data.gather.manager.OAIDManager;
@@ -33,7 +31,6 @@ import com.ciba.http.listener.SimpleHttpListener;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,9 +113,6 @@ public class DataGatherManager {
     public void initGather() {
         if (context != null && Looper.getMainLooper() == Looper.myLooper() && ProcessUtil.isMainProcess()) {
             OAIDManager.getInstance().init(context);
-            if (context instanceof Application) {
-                ((Application) context).registerActivityLifecycleCallbacks(new CustomActivityLifecycleCallbacks());
-            }
             DataArrangeUtil.dataGather(true, true, false, true, null, false);
         }
     }
@@ -183,7 +177,8 @@ public class DataGatherManager {
                     }
                 }
             });
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -196,7 +191,9 @@ public class DataGatherManager {
         }
 
         Map<String, String> requestParams = new HashMap<>(1);
-        requestParams.put("machineId", machineId + "");
+        //用dcid 替换 machineId
+        //requestParams.put("machineId", machineId + "");
+        requestParams.put("dcid", machineId + "");
         String installPackageUrl = SampleUrlManager.getInstallPackageUrl();
         AsyncHttpClient httpClient = SampleLoaderUploaderManager.getInstance().getHttpClient();
         httpClient.post(installPackageUrl, requestParams, new SimpleHttpListener() {

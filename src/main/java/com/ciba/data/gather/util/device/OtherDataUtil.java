@@ -19,59 +19,60 @@ public class OtherDataUtil {
      * 获取cid
      */
     public static String getCid() {
-        String str1 = null;
-        FileReader fileReader1 = null;
-        FileReader fileReader2 = null;
-        BufferedReader bufferedReader1 = null;
-        BufferedReader bufferedReader2 = null;
-        try {
-            fileReader1 = new FileReader("/sys/block/mmcblk0/device/type");
-            bufferedReader1 = new BufferedReader(fileReader1);
-            boolean localOb = bufferedReader1.readLine().toLowerCase().contentEquals("mmc");
-            if (localOb) {
-                str1 = "/sys/block/mmcblk0/device/";
-            }
-            // nand ID
-            fileReader2 = new FileReader(str1 + "cid");
-            bufferedReader2 = new BufferedReader(fileReader2);
-            str1 = bufferedReader2.readLine();
-        } catch (Exception e) {
-            DataGatherLog.innerI(e.getMessage());
-        } finally {
-            if (fileReader1 != null) {
-                try {
-                    fileReader1.close();
-                    fileReader1 = null;
-                } catch (IOException e) {
-                    DataGatherLog.innerI(e.getMessage());
-                }
-            }
-            if (fileReader2 != null) {
-                try {
-                    fileReader2.close();
-                    fileReader2 = null;
-                } catch (IOException e) {
-                    DataGatherLog.innerI(e.getMessage());
-                }
-            }
-            if (bufferedReader1 != null) {
-                try {
-                    bufferedReader1.close();
-                    bufferedReader1 = null;
-                } catch (IOException e) {
-                    DataGatherLog.innerI(e.getMessage());
-                }
-            }
-            if (bufferedReader2 != null) {
-                try {
-                    bufferedReader2.close();
-                    bufferedReader2 = null;
-                } catch (IOException e) {
-                    DataGatherLog.innerI(e.getMessage());
-                }
-            }
-        }
-        return str1;
+//        String str1 = null;
+//        FileReader fileReader1 = null;
+//        FileReader fileReader2 = null;
+//        BufferedReader bufferedReader1 = null;
+//        BufferedReader bufferedReader2 = null;
+//        try {
+//            fileReader1 = new FileReader("/sys/block/mmcblk0/device/type");
+//            bufferedReader1 = new BufferedReader(fileReader1);
+//            boolean localOb = bufferedReader1.readLine().toLowerCase().contentEquals("mmc");
+//            if (localOb) {
+//                str1 = "/sys/block/mmcblk0/device/";
+//            }
+//            // nand ID
+//            fileReader2 = new FileReader(str1 + "cid");
+//            bufferedReader2 = new BufferedReader(fileReader2);
+//            str1 = bufferedReader2.readLine();
+//        } catch (Exception e) {
+//            DataGatherLog.innerI(e.getMessage());
+//        } finally {
+//            if (fileReader1 != null) {
+//                try {
+//                    fileReader1.close();
+//                    fileReader1 = null;
+//                } catch (IOException e) {
+//                    DataGatherLog.innerI(e.getMessage());
+//                }
+//            }
+//            if (fileReader2 != null) {
+//                try {
+//                    fileReader2.close();
+//                    fileReader2 = null;
+//                } catch (IOException e) {
+//                    DataGatherLog.innerI(e.getMessage());
+//                }
+//            }
+//            if (bufferedReader1 != null) {
+//                try {
+//                    bufferedReader1.close();
+//                    bufferedReader1 = null;
+//                } catch (IOException e) {
+//                    DataGatherLog.innerI(e.getMessage());
+//                }
+//            }
+//            if (bufferedReader2 != null) {
+//                try {
+//                    bufferedReader2.close();
+//                    bufferedReader2 = null;
+//                } catch (IOException e) {
+//                    DataGatherLog.innerI(e.getMessage());
+//                }
+//            }
+//        }
+//        return str1;
+        return "";
     }
 
     public static String getUniquePsuedoID() {

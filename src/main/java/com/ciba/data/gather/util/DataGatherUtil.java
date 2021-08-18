@@ -16,7 +16,6 @@ import com.ciba.data.gather.listener.DeviceDataGatherListener;
 import com.ciba.data.gather.manager.OAIDManager;
 import com.ciba.data.gather.manager.UniqueIdManager;
 import com.ciba.data.gather.util.device.AdvertisingUtil;
-import com.ciba.data.gather.util.device.AirPressureUtils;
 import com.ciba.data.gather.util.device.BaseStationUtil;
 import com.ciba.data.gather.util.device.BatteryUtil;
 import com.ciba.data.gather.util.device.BlueToothUtil;
@@ -25,26 +24,27 @@ import com.ciba.data.gather.util.device.DisplayUtil;
 import com.ciba.data.gather.util.device.LocationUtil;
 import com.ciba.data.gather.util.device.NetworkUtil;
 import com.ciba.data.gather.util.device.OtherDataUtil;
-import com.ciba.data.gather.util.device.PackageUtil;
 import com.ciba.data.gather.util.device.PhoneStateUtil;
-import com.ciba.data.gather.util.device.ProcessUtil;
 import com.ciba.data.gather.util.device.RomUtil;
 import com.ciba.data.gather.util.device.RootUtil;
 import com.ciba.data.gather.util.device.SystemClockUtil;
 import com.ciba.data.gather.util.device.WifiUtil;
+import com.ciba.data.synchronize.common.DataSynchronizeManager;
 import com.ciba.data.synchronize.entity.CustomBluetoothInfo;
-import com.ciba.data.synchronize.entity.CustomPackageInfo;
 import com.ciba.data.synchronize.entity.DeviceData;
-import com.ciba.data.synchronize.entity.ProcessData;
 import com.ciba.data.synchronize.entity.WifiOtherDeviceData;
 import com.ciba.data.synchronize.manager.DataCacheManager;
+import com.ciba.data.synchronize.util.ADBUtil;
+import com.ciba.data.synchronize.util.PhoneBatteryUtil;
+import com.ciba.data.synchronize.util.SignCheckUtil;
+import com.ciba.data.synchronize.util.SystemPropertyUtil;
+import com.ciba.data.synchronize.util.TimeUtil;
 import com.ciba.http.manager.AsyncThreadPoolManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author ciba
@@ -70,17 +70,7 @@ public class DataGatherUtil {
         if (deviceDataGatherListener == null) {
             return;
         }
-        if (getSignalStrengths) {
-            BaseStationUtil.getSignalStrengths(500, new Handler(Looper.getMainLooper()) {
-                @Override
-                public void handleMessage(Message msg) {
-                    final String signalStrength = (String) msg.obj;
-                    gatherDeviceData(withoutSystemApp, appOnly, geocoder, signalStrength, isOnlyGetMachineId, deviceDataGatherListener);
-                }
-            });
-        } else {
-            gatherDeviceData(withoutSystemApp, appOnly, geocoder, Constant.GET_DATA_NULL, isOnlyGetMachineId, deviceDataGatherListener);
-        }
+        gatherDeviceData(withoutSystemApp, appOnly, geocoder, Constant.GET_DATA_NULL, isOnlyGetMachineId, deviceDataGatherListener);
     }
 
     private static void gatherDeviceData(final boolean withoutSystemApp, final boolean appOnly, final boolean geocoder
@@ -92,7 +82,7 @@ public class DataGatherUtil {
 
                 DeviceData deviceData = new DeviceData();
 
-                gatherAirPressure(deviceData);
+//                gatherAirPressure(deviceData);
 
                 gatherDisplayData(deviceData);
 
@@ -124,6 +114,35 @@ public class DataGatherUtil {
 
                 deviceData.setRuntime(SystemClockUtil.getElapsedRealtime());
 
+                deviceData.setTimezone(TimeUtil.getTimeZone());
+
+                //是否开网络代理，1 是，0 否
+                boolean proxy = ADBUtil.isProxy();
+                deviceData.setIsagent(proxy ? 1 : 0);
+
+                //是否开VPN代理，1 是，0 否
+                boolean isVpn = ADBUtil.isVPN(DataSynchronizeManager.getInstance().getContext());
+                deviceData.setIsvpn(isVpn ? 1 : 0);
+
+                boolean apkInDebug = ADBUtil.isApkInDebug(DataSynchronizeManager.getInstance().getContext());
+                deviceData.setIsrelease(apkInDebug ? 0 : 1);
+
+                //是否debug模式，1 是，0 否
+                boolean enableAdb = ADBUtil.isEnableAdb(DataSynchronizeManager.getInstance().getContext());
+                deviceData.setIsdebug(enableAdb ? 1 : 0);
+
+                //是否充电中，1 是，0 否
+                boolean charging = PhoneBatteryUtil.isCharging(DataSynchronizeManager.getInstance().getContext());
+                deviceData.setIscharging(charging ? 1 : 0);
+
+                //rom软件版本号
+                deviceData.setRomversion(SystemPropertyUtil.getRomVersionCode());
+
+                //安卓签名指纹
+                deviceData.setSign(SignCheckUtil.getCertificateSHA1Fingerprint(DataSynchronizeManager.getInstance().getContext()));
+
+                Log.e("wsong", deviceData.toString());
+
                 //初始化中 应用列表和安装进行均不读取
                 deviceDataGatherListener.onDeviceDataGather(null
                         , deviceData
@@ -139,24 +158,24 @@ public class DataGatherUtil {
      * @param device
      */
     private static void gatherAirPressure(final DeviceData device) {
-        try {
-            AsyncThreadPoolManager.getInstance()
-                    .getThreadPool()
-                    .submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            AirPressureUtils.getAirPressure(new AirPressureUtils.OnGetAirPressCallback() {
-                                @Override
-                                public void onGetAirPress(float pressure) {
-                                    if (device != null) {
-                                        device.setHpa(pressure);
-                                    }
-                                }
-                            });
-                        }
-                    }).get(3, TimeUnit.SECONDS);
-        } catch (Exception e) {
-        }
+//        try {
+//            AsyncThreadPoolManager.getInstance()
+//                    .getThreadPool()
+//                    .submit(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            AirPressureUtils.getAirPressure(new AirPressureUtils.OnGetAirPressCallback() {
+//                                @Override
+//                                public void onGetAirPress(float pressure) {
+//                                    if (device != null) {
+//                                        device.setHpa(pressure);
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }).get(3, TimeUnit.SECONDS);
+//        } catch (Exception e) {
+//        }
     }
 
     /**
@@ -186,14 +205,14 @@ public class DataGatherUtil {
         deviceData.setCoordinateType(customLocation.getCoordinateType());
         deviceData.setLocaAccuracy(customLocation.getAccuracy());
         deviceData.setCoordTime(customLocation.getTime());
-        deviceData.setAltitude(customLocation.getAltitude());
+//        deviceData.setAltitude(customLocation.getAltitude());
 
         if (customBaseStation != null) {
-            deviceData.setBscid(customBaseStation.getBscid());
-            deviceData.setBsss(customBaseStation.getBsss());
-            deviceData.setLac(customBaseStation.getLac());
-            deviceData.setCellularId(customBaseStation.getBscid());
-            deviceData.setStbif(customBaseStation.getStbif() == null ? "" : customBaseStation.getStbif());
+//            deviceData.setBscid(customBaseStation.getBscid());
+//            deviceData.setBsss(customBaseStation.getBsss());
+//            deviceData.setLac(customBaseStation.getLac());
+//            deviceData.setCellularId("");
+//            deviceData.setStbif(customBaseStation.getStbif() == null ? "" : customBaseStation.getStbif());
         }
     }
 
@@ -206,10 +225,6 @@ public class DataGatherUtil {
         deviceData.setIdfa("");
         deviceData.setIdfv("");
         deviceData.setOpenUdid("");
-        //权限允许的情况下读取cid
-        if (PhoneStateUtil.isCanGetPhoneStateInfo()) {
-            deviceData.setCid(OtherDataUtil.getCid());
-        }
         deviceData.setPdunid(OtherDataUtil.getUniquePsuedoID());
         deviceData.setCputy(CpuUtil.getCpuHardware());
 
@@ -229,8 +244,8 @@ public class DataGatherUtil {
         CustomPhoneState phoneState = PhoneStateUtil.getPhoneState();
         deviceData.setImsi(phoneState.getImsi());
         deviceData.setImei(phoneState.getImei());
-        deviceData.setMeid(phoneState.getMeid());
-        deviceData.setIccid(phoneState.getIccid());
+//        deviceData.setMeid("");
+//        deviceData.setIccid("");
         deviceData.setMcc(phoneState.getMcc());
         deviceData.setRoaming(phoneState.getIsNetworkRoaming());
         deviceData.setAndroidId(phoneState.getAndroidId());

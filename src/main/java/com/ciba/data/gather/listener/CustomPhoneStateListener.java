@@ -75,13 +75,13 @@ public class CustomPhoneStateListener extends PhoneStateListener {
     }
 
     private String getBsss(SignalStrength signalStrength) {
-        if (signalStrength == null) {
-            return Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
-        }
-        String signalStrengthStr = signalStrength.toString();
-        if (TextUtils.isEmpty(signalStrengthStr)) {
-            return Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
-        }
-        return signalStrengthStr;
+//        if (signalStrength == null) {
+//            return Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
+//        }
+//        String signalStrengthStr = signalStrength.toString();
+//        if (TextUtils.isEmpty(signalStrengthStr)) {
+//            return Constant.GET_DATA_FAILED_MAYBE_NO_SIM;
+//        }
+        return "";
     }
 }

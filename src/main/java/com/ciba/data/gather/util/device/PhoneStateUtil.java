@@ -70,7 +70,7 @@ public class PhoneStateUtil {
             if (per == PackageManager.PERMISSION_GRANTED) {
 
                 String imsi = null;
-                String iccid = null;
+//                String iccid = null;
                 String imei = null;
                 boolean networkRoaming = false;
                 if (DeviceUnableReadUtil.isUseImei()) {
@@ -85,7 +85,7 @@ public class PhoneStateUtil {
                             }
                         }
                         imsi = tm.getSubscriberId();
-                        iccid = tm.getSimSerialNumber();
+//                        iccid = tm.getSimSerialNumber();
                         if (TextUtils.isEmpty(imei)) {
                             try {
                                 imei = tm.getDeviceId();
@@ -99,17 +99,17 @@ public class PhoneStateUtil {
 
                 if (needDefaultValue) {
                     customPhoneState.setImei(TextUtils.isEmpty(imei) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imei);
-                    customPhoneState.setIccid(TextUtils.isEmpty(iccid) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : iccid);
+//                    customPhoneState.setIccid(TextUtils.isEmpty(iccid) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : iccid);
                     customPhoneState.setImsi(TextUtils.isEmpty(imsi) ? Constant.GET_DATA_FAILED_MAYBE_NO_SIM : imsi);
                 } else {
                     customPhoneState.setImei(imei == null ? "" : imei);
-                    customPhoneState.setIccid(iccid == null ? "" : iccid);
+//                    customPhoneState.setIccid(iccid == null ? "" : iccid);
                     customPhoneState.setImsi(imsi == null ? "" : imsi);
                 }
                 customPhoneState.setIsNetworkRoaming(networkRoaming ? 1 : 0);
             } else if (needDefaultValue) {
                 customPhoneState.setImei(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
-                customPhoneState.setIccid(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
+//                customPhoneState.setIccid(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
                 customPhoneState.setImsi(Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION);
             }
             getImeiAndMeid(DataGatherManager.getInstance().getContext(), customPhoneState);
@@ -138,7 +138,6 @@ public class PhoneStateUtil {
             if (deviceId != null && !Constant.GET_DATA_FAILED_MAYBE_NO_PERMISSION.equals(deviceId) && !Constant.GET_DATA_FAILED_MAYBE_NO_SIM.equals(deviceId)) {
                 if (deviceId.length() == 14) {
                     // meid
-                    customPhoneState.setMeid(deviceId);
                 } else {
                     customPhoneState.setImei1(deviceId);
                 }
@@ -146,14 +145,12 @@ public class PhoneStateUtil {
             String deviceId2 = (String) method1.invoke(manager, 1);
             if (deviceId2.length() == 14) {
                 // meid
-                customPhoneState.setMeid(deviceId2);
             } else {
                 customPhoneState.setImei1(deviceId2);
             }
             String deviceId3 = (String) method1.invoke(manager, 2);
             if (deviceId3.length() == 14) {
                 // meid
-                customPhoneState.setMeid(deviceId3);
             } else if (!deviceId3.equals(customPhoneState.getImei1())) {
                 customPhoneState.setImei2(deviceId3);
             }
@@ -164,16 +161,13 @@ public class PhoneStateUtil {
             try {
                 String imei1 = manager.getImei(0);
                 String imei2 = manager.getImei(1);
-                String meid = manager.getMeid();
                 if (!TextUtils.isEmpty(imei1)) {
                     customPhoneState.setImei1(imei1);
                 }
                 if (!TextUtils.isEmpty(imei2)) {
                     customPhoneState.setImei2(imei2);
                 }
-                if (!TextUtils.isEmpty(meid)) {
-                    customPhoneState.setMeid(meid);
-                }
+
             } catch (Exception e) {
                 DataGatherLog.innerI(e.getMessage());
             }
