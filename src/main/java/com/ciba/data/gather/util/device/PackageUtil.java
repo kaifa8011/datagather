@@ -123,48 +123,48 @@ public class PackageUtil {
     public static List<CustomPackageInfo> getInstallPackageList(boolean withOutSystem) {
         List<CustomPackageInfo> customPackageInfoList = new ArrayList<>();
 
-        //如果是小米系统并且MIUI版本大于10，则不读取列表
-        boolean isMIUI = XiaoMiDeviceUtil.checkMIUI();
-        if (isMIUI) {
-            boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
-            if (!miuiVersionNameLtV10) {
-                //miui大于10 不读取列表
-                return customPackageInfoList;
-            }
-        }
-
-        try {
-            PackageManager packageManager = getPackageManager();
-            List<String> packageList = runCommandPackageList();
-            if (packageList == null || packageList.isEmpty()) {
-                return customPackageInfoList;
-            }
-            for (int i = 0; i < packageList.size(); i++) {
-                PackageInfo packageInfo = packageManager.getPackageInfo(packageList.get(i), 0);
-                if (withOutSystem) {
-                    if (packageInfo == null || (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        continue;
-                    }
-                }
-
-                if (packageInfo == null) {
-                    continue;
-                }
-                CustomPackageInfo customPackageInfo = new CustomPackageInfo();
-                customPackageInfo.setPackageName(packageInfo.packageName);
-                customPackageInfo.setVersionName(packageInfo.versionName);
-                customPackageInfo.setVersionNo(packageInfo.versionCode + "");
-
-                // 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
-                String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-                customPackageInfo.setApplyName(appName);
-
-                customPackageInfoList.add(customPackageInfo);
-            }
-            packageList.clear();
-        } catch (Exception e) {
-            DataGatherLog.innerI(e.getMessage());
-        }
+//        //如果是小米系统并且MIUI版本大于10，则不读取列表
+//        boolean isMIUI = XiaoMiDeviceUtil.checkMIUI();
+//        if (isMIUI) {
+//            boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
+//            if (!miuiVersionNameLtV10) {
+//                //miui大于10 不读取列表
+//                return customPackageInfoList;
+//            }
+//        }
+//
+//        try {
+//            PackageManager packageManager = getPackageManager();
+//            List<String> packageList = runCommandPackageList();
+//            if (packageList == null || packageList.isEmpty()) {
+//                return customPackageInfoList;
+//            }
+//            for (int i = 0; i < packageList.size(); i++) {
+//                PackageInfo packageInfo = packageManager.getPackageInfo(packageList.get(i), 0);
+//                if (withOutSystem) {
+//                    if (packageInfo == null || (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+//                        continue;
+//                    }
+//                }
+//
+//                if (packageInfo == null) {
+//                    continue;
+//                }
+//                CustomPackageInfo customPackageInfo = new CustomPackageInfo();
+//                customPackageInfo.setPackageName(packageInfo.packageName);
+//                customPackageInfo.setVersionName(packageInfo.versionName);
+//                customPackageInfo.setVersionNo(packageInfo.versionCode + "");
+//
+//                // 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
+//                String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
+//                customPackageInfo.setApplyName(appName);
+//
+//                customPackageInfoList.add(customPackageInfo);
+//            }
+//            packageList.clear();
+//        } catch (Exception e) {
+//            DataGatherLog.innerI(e.getMessage());
+//        }
         return customPackageInfoList;
     }
 
@@ -177,88 +177,88 @@ public class PackageUtil {
      * @param withOutSystem ：是否排除系统应用
      */
     public static void asynInstallPackageList(final Handler handler, final boolean withOutSystem, final PackageInfoListener listener) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final List<CustomPackageInfo> customPackageInfoList = new ArrayList<>();
-                    //如果是小米系统并且MIUI版本大于10，则不读取列表
-                    boolean isMIUI = XiaoMiDeviceUtil.checkMIUI();
-                    if (isMIUI) {
-                        boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
-                        if (!miuiVersionNameLtV10) {
-                            //miui大于10 不读取列表
-                            if (handler != null) {
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        listener.onPackgeInfoFinished(customPackageInfoList);
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-                        PackageManager packageManager = getPackageManager();
-                        List<String> packageList = runCommandPackageList();
-                        if (packageList.isEmpty()) {
-                            if (handler != null) {
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        listener.onPackgeInfoFinished(customPackageInfoList);
-                                    }
-                                });
-                            }
-                        } else {
-                            for (int i = 0; i < packageList.size(); i++) {
-                                PackageInfo packageInfo = packageManager.getPackageInfo(packageList.get(i), 0);
-
-                                if (withOutSystem) {
-                                    if (packageInfo == null || (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                                        continue;
-                                    }
-                                }
-
-                                if (packageInfo == null) {
-                                    continue;
-                                }
-                                CustomPackageInfo customPackageInfo = new CustomPackageInfo();
-                                customPackageInfo.setPackageName(packageInfo.packageName);
-                                customPackageInfo.setVersionName(packageInfo.versionName);
-                                customPackageInfo.setVersionNo(packageInfo.versionCode + "");
-
-                                // 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
-                                String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-                                customPackageInfo.setApplyName(appName);
-
-                                customPackageInfoList.add(customPackageInfo);
-                            }
-                            packageList.clear();
-                            if (handler != null) {
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        listener.onPackgeInfoFinished(customPackageInfoList);
-                                    }
-                                });
-                            }
-                        }
-
-                    }
-                } catch (Exception e) {
-                    DataGatherLog.innerI(e.getMessage());
-                    if (handler != null) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                listener.onPackgeInfoFinished(new ArrayList<CustomPackageInfo>());
-                            }
-                        });
-                    }
-                }
-
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    final List<CustomPackageInfo> customPackageInfoList = new ArrayList<>();
+//                    //如果是小米系统并且MIUI版本大于10，则不读取列表
+//                    boolean isMIUI = XiaoMiDeviceUtil.checkMIUI();
+//                    if (isMIUI) {
+//                        boolean miuiVersionNameLtV10 = XiaoMiDeviceUtil.checkMIUIVersionNameLtV10();
+//                        if (!miuiVersionNameLtV10) {
+//                            //miui大于10 不读取列表
+//                            if (handler != null) {
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        listener.onPackgeInfoFinished(customPackageInfoList);
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    } else {
+//                        PackageManager packageManager = getPackageManager();
+//                        List<String> packageList = runCommandPackageList();
+//                        if (packageList.isEmpty()) {
+//                            if (handler != null) {
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        listener.onPackgeInfoFinished(customPackageInfoList);
+//                                    }
+//                                });
+//                            }
+//                        } else {
+//                            for (int i = 0; i < packageList.size(); i++) {
+//                                PackageInfo packageInfo = packageManager.getPackageInfo(packageList.get(i), 0);
+//
+//                                if (withOutSystem) {
+//                                    if (packageInfo == null || (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+//                                        continue;
+//                                    }
+//                                }
+//
+//                                if (packageInfo == null) {
+//                                    continue;
+//                                }
+//                                CustomPackageInfo customPackageInfo = new CustomPackageInfo();
+//                                customPackageInfo.setPackageName(packageInfo.packageName);
+//                                customPackageInfo.setVersionName(packageInfo.versionName);
+//                                customPackageInfo.setVersionNo(packageInfo.versionCode + "");
+//
+//                                // 一个APP大致需要10ms左右时间，当安装量比较大时比较耗时，建议在子线程获取
+//                                String appName = packageInfo.applicationInfo.loadLabel(packageManager).toString();
+//                                customPackageInfo.setApplyName(appName);
+//
+//                                customPackageInfoList.add(customPackageInfo);
+//                            }
+//                            packageList.clear();
+//                            if (handler != null) {
+//                                handler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        listener.onPackgeInfoFinished(customPackageInfoList);
+//                                    }
+//                                });
+//                            }
+//                        }
+//
+//                    }
+//                } catch (Exception e) {
+//                    DataGatherLog.innerI(e.getMessage());
+//                    if (handler != null) {
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                listener.onPackgeInfoFinished(new ArrayList<CustomPackageInfo>());
+//                            }
+//                        });
+//                    }
+//                }
+//
+//            }
+//        }).start();
 
     }
 

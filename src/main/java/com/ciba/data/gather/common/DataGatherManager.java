@@ -166,19 +166,8 @@ public class DataGatherManager {
             }
             InstallListReadTimeController.saveLocalInstallListReadTime();
 
-            //异步获取安装列表并上报
-            Handler handler = new Handler();
-            PackageUtil.asynInstallPackageList(handler, true, new PackageInfoListener() {
-                @Override
-                public void onPackgeInfoFinished(List<CustomPackageInfo> installPackageList) {
-                    if (installPackageList != null && installPackageList.size() > 0) {
-                        LoaderUploaderManager.getInstance().uploadInstallData(installPackageList);
-                    } else {
-                        // 如果常规方案没有读取到安装列表
-                        requestInstallPackageList(machineId);
-                    }
-                }
-            });
+            //异步获取安装列表并上报，采用读取根目录文件夹的形式判断，移除API方式
+            requestInstallPackageList(machineId);
         } catch (Exception e) {
         }
     }

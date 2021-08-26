@@ -28,7 +28,7 @@ public class UniqueIdChain {
 
     public String process() {
         if (index >= mUniqueIdGenerators.size()) {
-            return null;
+            return "";
         }
         UniqueIdChain next = new UniqueIdChain(context, mUniqueIdGenerators, index + 1);
         BaseUniqueIdGenerator idGenerator = mUniqueIdGenerators.get(index);
