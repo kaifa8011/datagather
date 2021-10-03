@@ -14,9 +14,9 @@ public class IIdentifierListenerImp implements IIdentifierListener {
     private Callback mCallback;
 
     @Override
-    public void OnSupport(boolean b, IdSupplier idSupplier) {
+    public void onSupport(IdSupplier idSupplier) {
         if (mCallback != null) {
-            mCallback.OnSupport(b, idSupplier);
+            mCallback.OnSupport(idSupplier);
         }
     }
 
@@ -25,7 +25,7 @@ public class IIdentifierListenerImp implements IIdentifierListener {
     }
 
     public interface Callback {
-        void OnSupport(boolean b, IdSupplier idSupplier);
+        void OnSupport(IdSupplier idSupplier);
     }
 
 }

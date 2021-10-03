@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bun.miitmdid.core.ErrorCode;
+import com.bun.miitmdid.core.InfoCode;
 import com.bun.miitmdid.core.MdidSdkHelper;
+import com.bun.miitmdid.interfaces.IIdentifierListener;
 import com.bun.miitmdid.interfaces.IdSupplier;
+import com.bun.miitmdid.pojo.IdSupplierImpl;
 import com.ciba.callback.IIdentifierListenerImp;
 import com.ciba.data.gather.util.ExceptionUtils;
 import com.ciba.data.synchronize.util.StateUtil;
@@ -39,7 +41,7 @@ public class OAIDDelegate {
         IIdentifierListenerImp listener = new IIdentifierListenerImp();
         listener.setCallback(new IIdentifierListenerImp.Callback() {
             @Override
-            public void OnSupport(boolean b, IdSupplier idSupplier) {
+            public void OnSupport(IdSupplier idSupplier) {
                 if (idSupplier == null) {
                     return;
                 }
@@ -65,18 +67,27 @@ public class OAIDDelegate {
 
 
     public void startGetOAID() {
-        int result = callFromReflect(mContext);
+        int code = callFromReflect(mContext);
         String error = "";
-        if (result == ErrorCode.INIT_ERROR_DEVICE_NOSUPPORT) {
-            error = "不支持的设备";
-        } else if (result == ErrorCode.INIT_ERROR_LOAD_CONFIGFILE) {
+        // 根据SDK返回的code进行不同处理
+        if(code == InfoCode.INIT_ERROR_CERT_ERROR){
+            error = "证书未初始化或证书无效";
+        }else if(code == InfoCode.INIT_ERROR_DEVICE_NOSUPPORT){
+            error = "证书未初始化或证书无效";
+        }else if( code == InfoCode.INIT_ERROR_LOAD_CONFIGFILE){
             error = "加载配置文件出错";
-        } else if (result == ErrorCode.INIT_ERROR_MANUFACTURER_NOSUPPORT) {
+        }else if(code == InfoCode.INIT_ERROR_MANUFACTURER_NOSUPPORT){
             error = "不支持的设备厂商";
-        } else if (result == ErrorCode.INIT_ERROR_RESULT_DELAY) {
-            error = "获取接口是异步的，结果会在回调中返回，回调执行的回调可能在工作线程";
-        } else if (result == ErrorCode.INIT_HELPER_CALL_ERROR) {
-            error = "反射调用出错";
+        }else if(code == InfoCode.INIT_ERROR_SDK_CALL_ERROR){
+            error = "sdk调用出错";
+        } else if(code == InfoCode.INIT_INFO_RESULT_DELAY) {
+            error = "获取接口是异步的";
+        }else if(code == InfoCode.INIT_INFO_RESULT_OK){
+            error = "获取接口是同步的";
+        }else {
+            // sdk版本高于DemoHelper代码版本可能出现的情况，无法确定是否调用onSupport
+            // 不影响成功的OAID获取
+            error = "getDeviceIds: unknown code: " + code;
         }
         if (!StateUtil.checkFlag() && !TextUtils.isEmpty(error)) {
             Log.e("OAIDDelegate", "startGetOAID: oaid获取失败 error " + error);

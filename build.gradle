@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
-def VERSION = "0.6.1"
+def VERSION = "0.6.2"
 
 android {
     compileSdkVersion 29
@@ -86,6 +86,6 @@ dependencies {
     api 'com.ciba:http:0.0.13'
 //    releaseApi 'com.ciba:datasynchronize:0.4.3'
     api project(':datasynchronize')
-    compileOnly(name: 'oaid_sdk_1.0.25', ext: 'aar')
+    compileOnly(name: 'oaid_sdk_1.0.26', ext: 'aar')
 
 }
