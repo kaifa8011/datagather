@@ -33,7 +33,6 @@ import com.ciba.data.synchronize.manager.DataCacheManager;
 import com.ciba.data.synchronize.util.ADBUtil;
 import com.ciba.data.synchronize.util.PhoneBatteryUtil;
 import com.ciba.data.synchronize.util.SignCheckUtil;
-import com.ciba.data.synchronize.util.SystemPropertyUtil;
 import com.ciba.data.synchronize.util.TimeUtil;
 import com.ciba.http.manager.AsyncThreadPoolManager;
 
